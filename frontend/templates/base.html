@@ -1,0 +1,188 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}NTT Data Gestão{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round" rel="stylesheet" />
+  <link href="{% static 'css/nttdata.css' %}" rel="stylesheet" />
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+{# ── Navbar ─────────────────────────────────────────────────────────── #}
+<nav class="navbar">
+  <button class="navbar-icon-btn d-md-none" id="menuToggle" aria-label="Menu">
+    <span class="material-icons">menu</span>
+  </button>
+
+  <a href="{% url 'dashboard:index' %}" class="navbar-brand">
+    <img src="{% static 'img/ntt_data_logo.png' %}" alt="NTT Data" style="height:28px;width:auto;">
+    <span style="color:rgba(255,255,255,.5);font-size:.75rem;font-weight:400;margin-left:.5rem;">{% trans "Gestão" %}</span>
+  </a>
+
+  <div class="navbar-spacer"></div>
+
+  <div class="navbar-actions">
+    {# Idioma #}
+    <!--<div class="lang-dropdown" id="langDropdown">
+      <button type="button" class="navbar-icon-btn lang-trigger" id="langTrigger" aria-label="{% trans 'Idioma' %}">
+        {% if LANGUAGE_CODE == 'pt-br' %}🇧🇷
+        {% elif LANGUAGE_CODE == 'en' %}🇺🇸
+        {% else %}🇪🇸{% endif %}
+        <span class="material-icons-outlined" style="font-size:14px;margin-left:1px;">expand_more</span>
+      </button>
+      <div class="lang-menu" id="langMenu">
+        <form action="{% url 'set_language' %}" method="post" id="langForm">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+          <button type="submit" name="language" value="pt-br"
+            class="lang-item {% if LANGUAGE_CODE == 'pt-br' %}active{% endif %}">
+            🇧🇷 <span>PT-BR</span>
+          </button>
+          <button type="submit" name="language" value="en"
+            class="lang-item {% if LANGUAGE_CODE == 'en' %}active{% endif %}">
+            🇺🇸 <span>EN</span>
+          </button>
+          <button type="submit" name="language" value="es"
+            class="lang-item {% if LANGUAGE_CODE == 'es' %}active{% endif %}">
+            🇪🇸 <span>ESP</span>
+          </button>
+        </form>
+      </div>
+    </div>-->
+
+    {# User menu #}
+    <div style="position:relative;">
+      <div class="user-avatar" data-dropdown="userMenu">
+        {% if user.avatar %}
+          <img src="{{ user.avatar.url }}" alt="{{ user.nome_display }}" />
+        {% else %}
+          {{ user.nome|first|upper }}
+        {% endif %}
+      </div>
+      <div class="dropdown-menu" id="userMenu" style="display:none;position:absolute;right:0;top:calc(100% + .5rem);">
+        <div style="padding:.5rem .75rem .75rem;border-bottom:1px solid var(--gray-200);margin-bottom:.35rem;">
+          <div style="font-weight:600;font-size:.875rem;color:var(--gray-900);">{{ user.nome_display }}</div>
+          <span class="badge badge-role-{{ user.role }}" style="margin-top:.25rem;">{{ user.get_role_display }}</span>
+        </div>
+        <a href="{% url 'profile' %}" class="dropdown-item">
+          <span class="material-icons-outlined" style="font-size:18px;">person_outline</span>{% trans "Meu Perfil" %}
+        </a>
+        <a href="{% url 'change-password' %}" class="dropdown-item">
+          <span class="material-icons-outlined" style="font-size:18px;">lock_outline</span>{% trans "Alterar Senha" %}
+        </a>
+        {% if user.is_staff %}
+        <a href="/admin/" target="_blank" class="dropdown-item">
+          <span class="material-icons-outlined" style="font-size:18px;">admin_panel_settings</span>{% trans "Administração" %}
+        </a>
+        <a href="/api/docs/" target="_blank" class="dropdown-item">
+          <span class="material-icons-outlined" style="font-size:18px;">api</span>{% trans "API Docs" %}
+        </a>
+        {% endif %}
+        <div class="dropdown-divider"></div>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="dropdown-item danger">
+            <span class="material-icons-outlined" style="font-size:18px;">logout</span>{% trans "Sair" %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>
+
+{# ── Sidebar ────────────────────────────────────────────────────────── #}
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">{% trans "Principal" %}</div>
+    <a href="{% url 'dashboard:index' %}" class="sidebar-item {% block nav_dashboard %}{% endblock %}">
+      <span class="material-icons-outlined">dashboard</span>{% trans "Dashboard" %}
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">{% trans "Gestão" %}</div>
+    <a href="{% url 'colaboradores-list' %}" class="sidebar-item {% block nav_colaboradores %}{% endblock %}">
+      <span class="material-icons-outlined">people_alt</span>{% trans "Colaboradores" %}
+    </a>
+    {% if user.role in "diretor,gestor" %}
+    <a href="{% url 'usuarios-list' %}" class="sidebar-item {% block nav_usuarios %}{% endblock %}">
+      <span class="material-icons-outlined">manage_accounts</span>{% trans "Usuários" %}
+    </a>
+    {% endif %}
+    <a href="{% url 'projetos-list' %}" class="sidebar-item {% block nav_projetos %}{% endblock %}">
+      <span class="material-icons-outlined">work_outline</span>{% trans "Projetos" %}
+    </a>
+    <a href="{% url 'clientes-list' %}" class="sidebar-item {% block nav_clientes %}{% endblock %}">
+      <span class="material-icons-outlined">business</span>{% trans "Clientes" %}
+    </a>
+    <a href="{% url 'contratos-list' %}" class="sidebar-item {% block nav_contratos %}{% endblock %}">
+      <span class="material-icons-outlined">description</span>{% trans "Contratos" %}
+    </a>
+    <a href="{% url 'notebooks-list' %}" class="sidebar-item {% block nav_notebooks %}{% endblock %}">
+      <span class="material-icons-outlined">laptop_mac</span>{% trans "Notebooks" %}
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">{% trans "Timeline" %}</div>
+    <a href="{% url 'timeline:index' %}" class="sidebar-item {% block nav_timeline %}{% endblock %}">
+      <span class="material-icons-outlined">timeline</span>{% trans "Timeline" %}
+    </a>
+  </div>
+
+  {% if user.is_gerente_ou_superior %}
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">{% trans "Análises" %}</div>
+    <a href="{% url 'relatorios-index' %}" class="sidebar-item {% block nav_relatorios %}{% endblock %}">
+      <span class="material-icons-outlined">bar_chart</span>{% trans "Relatórios" %}
+    </a>
+  </div>
+  {% endif %}
+</aside>
+
+{# ── Toasts ─────────────────────────────────────────────────────────── #}
+{% if messages %}
+<div class="toast-container">
+  {% for message in messages %}
+    {% if message.tags == 'success' %}
+      <div class="toast-msg toast-success">
+        <span class="material-icons">check_circle</span>
+        {{ message }}
+        <button class="toast-close"><span class="material-icons" style="font-size:18px;">close</span></button>
+      </div>
+    {% elif message.tags == 'error' %}
+      <div class="toast-msg toast-error">
+        <span class="material-icons">error_outline</span>
+        {{ message }}
+        <button class="toast-close"><span class="material-icons" style="font-size:18px;">close</span></button>
+      </div>
+    {% elif message.tags == 'warning' %}
+      <div class="toast-msg toast-warning">
+        <span class="material-icons">warning_amber</span>
+        {{ message }}
+        <button class="toast-close"><span class="material-icons" style="font-size:18px;">close</span></button>
+      </div>
+    {% else %}
+      <div class="toast-msg toast-info">
+        <span class="material-icons">info_outline</span>
+        {{ message }}
+        <button class="toast-close"><span class="material-icons" style="font-size:18px;">close</span></button>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+{# ── Main content ───────────────────────────────────────────────────── #}
+<main class="main-content">
+  {% block content %}{% endblock %}
+</main>
+
+<script src="{% static 'js/nttdata.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

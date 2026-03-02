@@ -1,0 +1,415 @@
+{% extends "base_auth.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Login" %} — NTT Data{% endblock %}
+
+{% block extra_css %}
+<style>
+  body.auth-body {
+    background: #0A1628;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Círculos decorativos de fundo */
+  body.auth-body::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,87,168,.25) 0%, transparent 70%);
+    top: -150px; right: -150px;
+    pointer-events: none;
+  }
+  body.auth-body::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,163,224,.15) 0%, transparent 70%);
+    bottom: -100px; left: -100px;
+    pointer-events: none;
+  }
+
+  .login-wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    min-height: 520px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,.5);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Painel esquerdo — marca */
+  .login-left {
+    flex: 1;
+    background: linear-gradient(145deg, #0A1628 0%, #0D2145 60%, #0A3272 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-left::before {
+    content: '';
+    position: absolute;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0,163,224,.15);
+    top: -80px; right: -80px;
+  }
+  .login-left::after {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,163,224,.1);
+    bottom: 60px; left: -60px;
+  }
+
+  .login-brand img {
+    height: 36px;
+    width: auto;
+  }
+
+  .login-headline {
+    position: relative;
+    z-index: 1;
+  }
+  .login-headline h2 {
+    font-size: 1.625rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: .75rem;
+    letter-spacing: -.3px;
+  }
+  .login-headline p {
+    font-size: .875rem;
+    color: rgba(255,255,255,.55);
+    line-height: 1.6;
+    max-width: 240px;
+  }
+
+  .login-dots {
+    display: flex;
+    gap: .4rem;
+  }
+  .login-dots span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.2);
+  }
+  .login-dots span:first-child {
+    background: #0057A8;
+    width: 18px;
+    border-radius: 3px;
+  }
+
+  /* Painel direito — formulário */
+  .login-right {
+    flex: 1;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2.5rem 2.75rem;
+  }
+
+  .login-right-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0A1628;
+    margin-bottom: .3rem;
+  }
+  .login-right-sub {
+    font-size: .8rem;
+    color: #6B7280;
+    margin-bottom: 1.75rem;
+  }
+
+  .lf-group { margin-bottom: 1rem; }
+  .lf-label {
+    display: block;
+    font-size: .78rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: .3rem;
+    letter-spacing: .2px;
+  }
+  .lf-input {
+    width: 100%;
+    padding: .6rem .875rem;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: .875rem;
+    font-family: inherit;
+    color: #111827;
+    background: #F9FAFB;
+    outline: none;
+    transition: border-color .15s, background .15s, box-shadow .15s;
+  }
+  .lf-input:focus {
+    border-color: #0057A8;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0,87,168,.1);
+  }
+  .lf-input::placeholder { color: #9CA3AF; }
+
+  .lf-pwd-wrap { position: relative; }
+  .lf-pwd-toggle {
+    position: absolute;
+    right: .75rem; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    cursor: pointer; color: #9CA3AF;
+    display: flex; align-items: center;
+    transition: color .12s;
+  }
+  .lf-pwd-toggle:hover { color: #0057A8; }
+  .lf-pwd-toggle .material-icons-outlined { font-size: 19px; }
+
+  .lf-error-banner {
+    background: #FFF0ED;
+    border-left: 3px solid #C94E2C;
+    border-radius: 6px;
+    padding: .65rem .875rem;
+    margin-bottom: 1rem;
+    font-size: .8125rem;
+    color: #7C2D12;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+  }
+  .lf-error-banner .material-icons { font-size: 16px; }
+
+  .lf-field-error {
+    font-size: .75rem;
+    color: #C94E2C;
+    margin-top: .25rem;
+    display: flex;
+    align-items: center;
+    gap: .2rem;
+  }
+  .lf-field-error .material-icons { font-size: 13px; }
+
+  .lf-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    margin-top: .25rem;
+  }
+  .lf-check {
+    display: flex; align-items: center; gap: .4rem;
+    cursor: pointer; font-size: .8125rem; color: #4B5563;
+  }
+  .lf-check input[type=checkbox] {
+    width: 14px; height: 14px;
+    accent-color: #0057A8;
+    cursor: pointer;
+  }
+  .lf-forgot {
+    font-size: .8rem;
+    color: #0057A8;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color .12s;
+  }
+  .lf-forgot:hover { color: #003F80; text-decoration: none; }
+
+  .lf-submit {
+    width: 100%;
+    padding: .7rem;
+    background: #0057A8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: .9375rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    transition: background .15s, transform .1s, box-shadow .15s;
+    letter-spacing: .1px;
+  }
+  .lf-submit:hover {
+    background: #003F80;
+    box-shadow: 0 4px 16px rgba(0,87,168,.35);
+    transform: translateY(-1px);
+  }
+  .lf-submit:active { transform: translateY(0); }
+  .lf-submit .material-icons-outlined { font-size: 18px; }
+
+  .lf-lang {
+    display: flex;
+    justify-content: center;
+    gap: .3rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #F3F4F6;
+  }
+  .lf-lang-btn {
+    padding: .22rem .7rem;
+    border-radius: 4px;
+    border: 1.5px solid #E5E7EB;
+    background: transparent;
+    font-size: .75rem;
+    font-weight: 700;
+    color: #6B7280;
+    cursor: pointer;
+    transition: all .12s;
+    font-family: inherit;
+    letter-spacing: .3px;
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    line-height: 1.6;
+  }
+  .lf-lang-btn:hover { border-color: #0057A8; color: #0057A8; }
+  .lf-lang-btn.active { border-color: #0057A8; color: #0057A8; background: #EEF4FB; }
+
+  /* Responsivo */
+  @media (max-width: 640px) {
+    .login-left { display: none; }
+    .login-right { padding: 2rem 1.5rem; border-radius: 16px; }
+    .login-wrapper { max-width: 420px; border-radius: 16px; }
+  }
+</style>
+{% endblock %}
+
+{% block auth_content %}
+<div class="login-wrapper">
+
+  <!-- Esquerda: Marca -->
+  <div class="login-left">
+    <div class="login-brand">
+      <img src="{% static 'img/ntt_data_logo.png' %}" alt="NTT Data">
+    </div>
+
+    <div class="login-headline">
+      <h2>{% trans "Gestão de Colaboradores e Projetos" %}</h2>
+      <p>{% trans "Controle centralizado de equipes, alocações, contratos e ativos tecnológicos." %}</p>
+    </div>
+
+    <div class="login-dots">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Direita: Formulário -->
+  <div class="login-right">
+    <div class="login-right-title">{% trans "Bem-vindo de volta" %}</div>
+    <div class="login-right-sub">{% trans "Informe suas credenciais para acessar o sistema." %}</div>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="lf-group">
+        <label class="lf-label" for="{{ form.username.id_for_label }}">{% trans "Usuário ou e-mail" %}</label>
+        <input type="text"
+               id="{{ form.username.id_for_label }}"
+               name="{{ form.username.html_name }}"
+               value="{{ form.username.value|default:'' }}"
+               class="lf-input"
+               placeholder="seu.usuario ou email@empresa.com"
+               autocomplete="username">
+        {% if form.username.errors %}
+          <div class="lf-field-error">
+            <span class="material-icons">error</span>{{ form.username.errors|join:", " }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="lf-group">
+        <label class="lf-label" for="{{ form.password.id_for_label }}">{% trans "Senha" %}</label>
+        <div class="lf-pwd-wrap">
+          <input type="password"
+                 id="{{ form.password.id_for_label }}"
+                 name="{{ form.password.html_name }}"
+                 class="lf-input"
+                 placeholder="••••••••"
+                 autocomplete="current-password">
+          <button type="button" id="togglePwd" class="lf-pwd-toggle">
+            <span class="material-icons-outlined" id="eyeIcon">visibility</span>
+          </button>
+        </div>
+        {% if form.password.errors %}
+          <div class="lf-field-error">
+            <span class="material-icons">error</span>{{ form.password.errors|join:", " }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if form.non_field_errors %}
+        <div class="lf-error-banner">
+          <span class="material-icons">error_outline</span>
+          {{ form.non_field_errors|join:", " }}
+        </div>
+      {% endif %}
+
+      <div class="lf-row">
+        <label class="lf-check">
+          <input type="checkbox"
+                 id="{{ form.remember_me.id_for_label }}"
+                 name="{{ form.remember_me.html_name }}"
+                 {% if form.remember_me.value %}checked{% endif %}>
+          {% trans "Manter conectado" %}
+        </label>
+        <a href="{% url 'password_reset' %}" class="lf-forgot">{% trans "Esqueci minha senha" %}</a>
+      </div>
+
+      <button type="submit" class="lf-submit">
+        <span class="material-icons-outlined">login</span>
+        {% trans "Entrar" %}
+      </button>
+    </form>
+
+    <!--<div class="lf-lang">
+      <form action="{% url 'set_language' %}" method="post" id="loginLangForm">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+        <button type="submit" class="lf-lang-btn {% if LANGUAGE_CODE == 'pt-br' %}active{% endif %}" name="language" value="pt-br">
+          🇧🇷 PT
+        </button>
+        <button type="submit" class="lf-lang-btn {% if LANGUAGE_CODE == 'en' %}active{% endif %}" name="language" value="en">
+          🇺🇸 EN
+        </button>
+        <button type="submit" class="lf-lang-btn {% if LANGUAGE_CODE == 'es' %}active{% endif %}" name="language" value="es">
+          🇪🇸 ES
+        </button>
+      </form>
+    </div>-->
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.getElementById("togglePwd").addEventListener("click", function () {
+    const pwd = document.getElementById("{{ form.password.id_for_label }}");
+    const icon = document.getElementById("eyeIcon");
+    if (pwd.type === "password") {
+      pwd.type = "text";
+      icon.textContent = "visibility_off";
+    } else {
+      pwd.type = "password";
+      icon.textContent = "visibility";
+    }
+  });
+</script>
+{% endblock %}

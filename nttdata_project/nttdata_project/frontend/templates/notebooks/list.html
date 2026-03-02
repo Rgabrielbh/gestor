@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Notebooks" %} — NTT Data{% endblock %}
+{% block nav_notebooks %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">laptop_mac</span>{% trans "Notebooks" %}</h1>
+  </div>
+  <div class="page-header-actions">
+    {% if user.role in 'diretor,gestor' %}
+    <a href="{% url 'notebooks-create' %}" class="btn btn-primary"><span class="material-icons-outlined">add</span>{% trans "Novo Notebook" %}</a>
+    {% endif %}
+  </div>
+</div>
+<div class="filter-bar">
+  <form method="get" style="display:contents;">
+    <div class="filter-group" style="flex:1;">
+      <label>{% trans "Busca" %}</label>
+      <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Nº série, responsável, modelo...">
+    </div>
+    <button type="submit" class="btn btn-primary"><span class="material-icons-outlined">search</span>{% trans "Filtrar" %}</button>
+    <a href="{% url 'notebooks-list' %}" class="btn btn-outline"><span class="material-icons-outlined">clear</span>{% trans "Limpar" %}</a>
+  </form>
+</div>
+<div class="card">
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>{% trans "Nº Série" %}</th><th>{% trans "Marca / Modelo" %}</th><th>{% trans "Origem" %}</th><th>{% trans "Localização" %}</th><th>{% trans "Responsável" %}</th><th>{% trans "Status" %}</th><th style="text-align:right;">{% trans "Ações" %}</th></tr></thead>
+      <tbody>
+        {% for obj in notebooks %}
+        <tr>
+          <td><span style="font-weight:500;font-family:monospace;">{{ obj.numero_serie }}</span></td>
+          <td style="font-size:.85rem;">{{ obj.marca }} {{ obj.modelo }}</td>
+          <td><span class="badge {% if obj.eh_ntt %}badge-info{% elif obj.eh_cliente %}badge-secondary{% else %}badge-secondary{% endif %}">{{ obj.origem }}</span></td>
+          <td style="font-size:.85rem;color:var(--gray-500);">{{ obj.localizacao|default:"—" }}</td>
+          <td>
+            {% if obj.responsavel %}
+            <div class="user-row">
+              <div class="avatar avatar-sm avatar-blue">{{ obj.responsavel.nome|first|upper }}</div>
+              <span style="font-size:.85rem;">{{ obj.responsavel.nome }}</span>
+            </div>
+            {% else %}<span style="color:var(--gray-400);font-size:.8rem;">{% trans "Sem responsável" %}</span>{% endif %}
+          </td>
+          <td>{% if obj.ativo %}<span class="badge badge-success">{% trans "Ativo" %}</span>{% else %}<span class="badge badge-secondary">{% trans "Inativo" %}</span>{% endif %}</td>
+          <td><div class="td-actions">
+            <a href="{% url 'notebooks-detail' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined">visibility</span></a>
+            {% if user.role in 'diretor,gestor' %}
+            <a href="{% url 'notebooks-update' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined">edit</span></a>
+            <a href="{% url 'notebooks-delete' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined" style="color:var(--danger);">delete</span></a>
+            {% endif %}
+          </div></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7"><div class="empty-state"><span class="material-icons-outlined">laptop_mac</span><h3>{% trans "Nenhum notebook encontrado." %}</h3></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

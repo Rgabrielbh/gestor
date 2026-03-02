@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Projetos" %} — NTT Data{% endblock %}
+{% block nav_projetos %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">work_outline</span>{% trans "Projetos" %}</h1>
+  </div>
+  <div class="page-header-actions">
+    {% if user.role in 'diretor,gestor' %}
+    <a href="{% url 'alocacao-create' %}" class="btn btn-outline"><span class="material-icons-outlined">person_add</span>{% trans "Alocar" %}</a>
+    <a href="{% url 'projetos-create' %}" class="btn btn-primary"><span class="material-icons-outlined">add</span>{% trans "Novo Projeto" %}</a>
+    {% endif %}
+  </div>
+</div>
+<div class="filter-bar">
+  <form method="get" style="display:contents;">
+    <div class="filter-group" style="flex:1;">
+      <label>{% trans "Busca" %}</label>
+      <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Nome, OV...">
+    </div>
+    <button type="submit" class="btn btn-primary"><span class="material-icons-outlined">search</span>{% trans "Filtrar" %}</button>
+    <a href="{% url 'projetos-list' %}" class="btn btn-outline"><span class="material-icons-outlined">clear</span>{% trans "Limpar" %}</a>
+  </form>
+</div>
+<div class="card">
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>{% trans "Projeto" %}</th><th>{% trans "Cliente" %}</th><th>OV</th><th>{% trans "Alocação" %}</th><th>{% trans "Gestor" %}</th><th>{% trans "Contrato" %}</th><th style="text-align:right;">{% trans "Ações" %}</th></tr></thead>
+      <tbody>
+        {% for obj in projetos %}
+        <tr>
+          <td>
+            <a href="{% url 'projetos-detail' obj.pk %}" style="color:var(--ntt-blue);text-decoration:none;font-weight:500;">{{ obj.nome_proj_ntt }}</a>
+            {% if obj.contrato_pend %}<span class="badge badge-warning" style="margin-left:.35rem;font-size:.65rem;">Pend.</span>{% endif %}
+          </td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ obj.id_cliente.nome }}</td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ obj.ov|default:"—" }}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <div class="progress" style="width:70px;"><div class="progress-bar {% if obj.percentual_alocacao >= 90 %}green{% elif obj.percentual_alocacao >= 60 %}orange{% else %}red{% endif %}" style="width:{{ obj.percentual_alocacao }}%;"></div></div>
+              <span style="font-size:.75rem;color:var(--gray-500);">{{ obj.percentual_alocacao }}%</span>
+            </div>
+          </td>
+          <td style="font-size:.8rem;">{{ obj.gestor.nome|default:"—" }}</td>
+          <td>{% if obj.contrato %}<span class="badge badge-info">{{ obj.contrato.codigo }}</span>{% else %}<span style="color:var(--gray-400);font-size:.8rem;">—</span>{% endif %}</td>
+          <td><div class="td-actions">
+            <a href="{% url 'projetos-detail' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined">visibility</span></a>
+            {% if user.role in 'diretor,gestor' %}
+            <a href="{% url 'projetos-update' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined">edit</span></a>
+            <a href="{% url 'projetos-delete' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined" style="color:var(--danger);">delete</span></a>
+            {% endif %}
+          </div></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7"><div class="empty-state"><span class="material-icons-outlined">work_outline</span><h3>{% trans "Nenhum projeto encontrado." %}</h3></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

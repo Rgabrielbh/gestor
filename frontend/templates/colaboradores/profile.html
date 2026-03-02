@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Meu Perfil" %} — NTT Data{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">person_outline</span>{% trans "Meu Perfil" %}</h1>
+  </div>
+  <div class="page-header-actions">
+    <a href="{% url "change-password" %}" class="btn btn-outline">
+      <span class="material-icons-outlined">lock</span>{% trans "Alterar Senha" %}
+    </a>
+  </div>
+</div>
+<div style="display:grid;grid-template-columns:280px 1fr;gap:1rem;align-items:start;">
+  <div class="card" style="text-align:center;padding:2rem 1.5rem;">
+    {% if user.avatar %}
+      <img src="{{ user.avatar.url }}" class="avatar avatar-xl" style="margin:0 auto 1rem;" />
+    {% else %}
+      <div class="avatar avatar-xl avatar-blue" style="margin:0 auto 1rem;">{{ user.nome|first|upper }}</div>
+    {% endif %}
+    <h3 style="font-size:1rem;font-weight:700;color:var(--gray-900);">{{ user.nome_display }}</h3>
+    <span class="badge badge-role-{{ user.role }}" style="margin-top:.5rem;">{{ user.get_role_display }}</span>
+    <div style="margin-top:1rem;font-size:.8rem;color:var(--gray-500);">
+      <div>{% trans "Desde:" %} {{ user.date_joined|date:"d/m/Y" }}</div>
+      <div>{% trans "Último acesso:" %} {{ user.last_login|date:"d/m/Y H:i"|default:"—" }}</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-header-left"><span class="material-icons-outlined">edit</span>{% trans "Editar Informações" %}</div></div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+          {% for field in form %}
+          <div class="form-group">
+            <label class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<div class="invalid-feedback"><span class="material-icons" style="font-size:14px;">error</span>{{ field.errors|join:", " }}</div>{% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        <div style="margin-top:1.25rem;border-top:1px solid var(--gray-200);padding-top:1.25rem;">
+          <button type="submit" class="btn btn-primary">
+            <span class="material-icons">save</span>{% trans "Salvar alterações" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ colaborador.nome }} — NTT Data{% endblock %}
+{% block nav_colaboradores %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">person</span>{{ colaborador.nome }}</h1>
+    <div class="breadcrumb">
+      <a href="{% url "colaboradores-list" %}" style="color:var(--gray-500);text-decoration:none;">{% trans "Colaboradores" %}</a>
+      <span class="material-icons" style="font-size:14px;">chevron_right</span>
+      {{ colaborador.nome }}
+    </div>
+  </div>
+  <div class="page-header-actions">
+    {% if user.role in "diretor,gestor" %}
+    <a href="{% url "colaboradores-update" colaborador.pk %}" class="btn btn-outline">
+      <span class="material-icons-outlined">edit</span>{% trans "Editar" %}
+    </a>
+    {% endif %}
+    <a href="{% url "colaboradores-list" %}" class="btn btn-outline">
+      <span class="material-icons-outlined">arrow_back</span>{% trans "Voltar" %}
+    </a>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:300px 1fr;gap:1rem;align-items:start;">
+  <!-- Card perfil -->
+  <div class="card" style="text-align:center;padding:2rem 1.5rem;">
+    {% if colaborador.avatar %}
+      <img src="{{ colaborador.avatar.url }}" class="avatar avatar-xl" style="margin:0 auto 1rem;" />
+    {% else %}
+      <div class="avatar avatar-xl avatar-blue" style="margin:0 auto 1rem;">{{ colaborador.nome|first|upper }}</div>
+    {% endif %}
+    <h3 style="font-size:1.1rem;font-weight:700;color:var(--gray-900);margin-bottom:.35rem;">{{ colaborador.nome }}</h3>
+    <div style="margin-bottom:.75rem;">
+      <span class="badge badge-role-{{ colaborador.role }}">{{ colaborador.get_role_display }}</span>
+    </div>
+    {% if colaborador.status == "ativo" %}
+      <span class="badge badge-success" style="font-size:.8rem;">{% trans "Ativo" %}</span>
+    {% elif colaborador.status == "inativo" %}
+      <span class="badge badge-secondary" style="font-size:.8rem;">{% trans "Inativo" %}</span>
+    {% else %}
+      <span class="badge badge-warning" style="font-size:.8rem;">{% trans "Afastado" %}</span>
+    {% endif %}
+
+    <div style="margin-top:1.25rem;text-align:left;display:flex;flex-direction:column;gap:.6rem;">
+      {% if colaborador.email %}
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--gray-600);">
+        <span class="material-icons-outlined" style="font-size:18px;color:var(--ntt-blue);">email</span>
+        <a href="mailto:{{ colaborador.email }}" style="color:var(--gray-600);text-decoration:none;">{{ colaborador.email }}</a>
+      </div>
+      {% endif %}
+      {% if colaborador.telefone %}
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--gray-600);">
+        <span class="material-icons-outlined" style="font-size:18px;color:var(--ntt-blue);">phone</span>
+        {{ colaborador.telefone }}
+      </div>
+      {% endif %}
+      {% if colaborador.cidade %}
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--gray-600);">
+        <span class="material-icons-outlined" style="font-size:18px;color:var(--ntt-blue);">location_on</span>
+        {{ colaborador.cidade }}{% if colaborador.estado %}, {{ colaborador.estado }}{% endif %}
+      </div>
+      {% endif %}
+      {% if colaborador.matricula %}
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--gray-600);">
+        <span class="material-icons-outlined" style="font-size:18px;color:var(--ntt-blue);">badge</span>
+        {% trans "Matrícula" %}: {{ colaborador.matricula }}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Detalhes -->
+  <div style="display:flex;flex-direction:column;gap:1rem;">
+    <div class="card">
+      <div class="card-header"><div class="card-header-left"><span class="material-icons-outlined">work</span>{% trans "Dados Profissionais" %}</div></div>
+      <div class="card-body">
+        <div class="detail-row">
+          <div class="detail-item"><dt>{% trans "Cargo" %}</dt><dd>{{ colaborador.cargo|default:"—" }}</dd></div>
+          <div class="detail-item"><dt>{% trans "Função" %}</dt><dd>{{ colaborador.funcao|default:"—" }}</dd></div>
+          <div class="detail-item"><dt>{% trans "Local" %}</dt><dd>{{ colaborador.local_escritorio|default:"—" }}</dd></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item"><dt>{% trans "Admissão" %}</dt><dd>{{ colaborador.dt_admissao|date:"d/m/Y"|default:"—" }}</dd></div>
+          <div class="detail-item"><dt>{% trans "Demissão" %}</dt><dd>{{ colaborador.dt_demissao|date:"d/m/Y"|default:"—" }}</dd></div>
+          <div class="detail-item"><dt>{% trans "Gestor" %}</dt><dd>{{ colaborador.gestor_direto.nome|default:"—" }}</dd></div>
+        </div>
+      </div>
+    </div>
+
+    {% if alocacoes_ativas %}
+    <div class="card">
+      <div class="card-header"><div class="card-header-left"><span class="material-icons-outlined">assignment_ind</span>{% trans "Projetos Ativos" %}</div></div>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>{% trans "Projeto" %}</th><th>{% trans "Cliente" %}</th><th>{% trans "Função" %}</th><th>{% trans "Squad" %}</th><th>{% trans "Início" %}</th></tr></thead>
+          <tbody>
+            {% for al in alocacoes_ativas %}
+            <tr>
+              <td><a href="{% url "projetos-detail" al.id_proj.pk %}" style="color:var(--ntt-blue);text-decoration:none;font-weight:500;">{{ al.id_proj.nome_proj_ntt }}</a></td>
+              <td style="font-size:.8rem;color:var(--gray-500);">{{ al.id_cliente.nome }}</td>
+              <td>{{ al.funcao|default:"—" }}</td>
+              <td>{{ al.squad|default:"—" }}</td>
+              <td style="font-size:.8rem;color:var(--gray-500);">{{ al.dt_inicio|date:"d/m/Y" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if notebooks %}
+    <div class="card">
+      <div class="card-header"><div class="card-header-left"><span class="material-icons-outlined">laptop_mac</span>{% trans "Notebooks" %}</div></div>
+      <div class="card-body">
+        {% for nb in notebooks %}
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--gray-100);">
+          <div>
+            <div style="font-weight:500;font-size:.875rem;">{{ nb.numero_serie }}</div>
+            <div style="font-size:.75rem;color:var(--gray-500);">{{ nb.marca }} {{ nb.modelo }} — {{ nb.origem }}</div>
+          </div>
+          <button onclick="abrirModalNotebook('{{ nb.pk }}','{{ nb.numero_serie }}','{{ nb.marca }} {{ nb.modelo }}')"
+                  class="btn btn-icon btn-outline btn-sm" title="Ver histórico">
+            <span class="material-icons-outlined">visibility</span>
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Modal histórico notebook -->
+    <div id="modalNotebook" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">
+      <div style="background:#fff;border-radius:var(--radius);width:92%;max-width:600px;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+        <div style="background:linear-gradient(135deg,#0A1628 0%,#0057A8 100%);padding:1rem 1.25rem;border-radius:var(--radius) var(--radius) 0 0;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div id="modalNbTitulo" style="font-size:1rem;font-weight:700;color:#fff;"></div>
+            <div id="modalNbSub" style="font-size:.8rem;color:rgba(255,255,255,.7);margin-top:.15rem;"></div>
+          </div>
+          <button onclick="fecharModalNotebook()" style="background:rgba(255,255,255,.15);border:none;border-radius:6px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+            <span class="material-icons-outlined" style="color:#fff;font-size:18px;">close</span>
+          </button>
+        </div>
+        <div id="modalNbBody" style="overflow-y:auto;padding:1.25rem;flex:1;">
+          <div style="text-align:center;padding:2rem;color:var(--gray-400);">
+            <span class="material-icons-outlined" style="font-size:36px;display:block;margin-bottom:.5rem;">hourglass_empty</span>
+            Carregando...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    function abrirModalNotebook(pk, serie, modelo) {
+      document.getElementById('modalNbTitulo').textContent = serie;
+      document.getElementById('modalNbSub').textContent = modelo;
+      document.getElementById('modalNotebook').style.display = 'flex';
+      document.getElementById('modalNbBody').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gray-400);"><span class="material-icons-outlined" style="font-size:36px;display:block;margin-bottom:.5rem;">hourglass_empty</span>Carregando...</div>';
+
+      fetch('/notebooks/' + pk + '/historico-json/')
+        .then(r => r.json())
+        .then(data => renderHistoricoModal(data))
+        .catch(() => {
+          document.getElementById('modalNbBody').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--danger);">Erro ao carregar histórico.</div>';
+        });
+    }
+
+    function fecharModalNotebook() {
+      document.getElementById('modalNotebook').style.display = 'none';
+    }
+
+    document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharModalNotebook(); });
+    document.getElementById('modalNotebook').addEventListener('click', function(e) {
+      if(e.target === this) fecharModalNotebook();
+    });
+
+    function renderHistoricoModal(data) {
+      if (!data.historico || data.historico.length === 0) {
+        document.getElementById('modalNbBody').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gray-400);"><span class="material-icons-outlined" style="font-size:36px;display:block;">history</span>Nenhum histórico registrado.</div>';
+        return;
+      }
+      let html = '<div style="padding-left:2rem;position:relative;">';
+      html += '<div style="position:absolute;left:.65rem;top:0;bottom:0;width:2px;background:#e5e7eb;border-radius:2px;"></div>';
+      data.historico.forEach(h => {
+        const ativo = !h.dt_fim;
+        const dotColor = ativo ? '#16a34a' : '#9ca3af';
+        const borderColor = ativo ? '#16a34a' : '#e5e7eb';
+        html += `<div style="position:relative;margin-bottom:1rem;">
+          <div style="position:absolute;left:-1.45rem;top:.3rem;width:12px;height:12px;border-radius:50%;background:${dotColor};border:2.5px solid #fff;box-shadow:0 0 0 2px ${dotColor}22;z-index:1;"></div>
+          <div style="background:#fff;border:1px solid #e5e7eb;border-left:3px solid ${borderColor};border-radius:6px;padding:.75rem 1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
+              <div>
+                <div style="font-size:.875rem;font-weight:700;color:#111827;">${h.responsavel || '—'}</div>
+                ${h.cargo ? `<div style="font-size:.75rem;color:#6b7280;">${h.cargo}</div>` : ''}
+                ${h.cliente ? `<div style="font-size:.75rem;color:#0057A8;font-weight:500;">${h.cliente}</div>` : ''}
+                ${h.localizacao ? `<div style="font-size:.72rem;color:#9ca3af;">${h.localizacao}</div>` : ''}
+              </div>
+              <span style="font-size:.7rem;font-weight:600;padding:.2rem .5rem;border-radius:4px;white-space:nowrap;${ativo ? 'background:#dcfce7;color:#166534;' : 'background:#f3f4f6;color:#6b7280;'}">${ativo ? 'Atual' : 'Encerrado'}</span>
+            </div>
+            <div style="font-size:.72rem;color:#9ca3af;margin-top:.35rem;">
+              📅 ${h.dt_inicio}${h.dt_fim ? ' → ' + h.dt_fim : ' → <strong>presente</strong>'}
+            </div>
+            ${h.duracao ? `<div style="display:inline-flex;align-items:center;gap:.2rem;font-size:.72rem;font-weight:600;background:#eff6ff;color:#0057A8;padding:.15rem .45rem;border-radius:3px;margin-top:.3rem;">⏱ ${h.duracao}</div>` : ''}
+            ${h.observacao ? `<div style="margin-top:.35rem;font-size:.75rem;color:#6b7280;font-style:italic;">${h.observacao}</div>` : ''}
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+
+      // Info geral no topo
+      let info = `<div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem;">`;
+      if (data.patrimonio_ntt) info += `<div style="background:#eff6ff;border-radius:6px;padding:.4rem .75rem;font-size:.75rem;"><span style="color:#6b7280;">Pat. NTT: </span><strong style="color:#0057A8;">${data.patrimonio_ntt}</strong></div>`;
+      if (data.patrimonio_cliente) info += `<div style="background:#eff6ff;border-radius:6px;padding:.4rem .75rem;font-size:.75rem;"><span style="color:#6b7280;">Pat. Cliente: </span><strong style="color:#0057A8;">${data.patrimonio_cliente}</strong></div>`;
+      if (data.localizacao) info += `<div style="background:#f9fafb;border-radius:6px;padding:.4rem .75rem;font-size:.75rem;"><span style="color:#6b7280;">Local: </span><strong>${data.localizacao}</strong></div>`;
+      info += `</div>`;
+
+      document.getElementById('modalNbBody').innerHTML = info + html;
+    }
+    </script>
+  </div>
+</div>
+{% endblock %}

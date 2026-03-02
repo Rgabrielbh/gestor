@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Clientes" %} — NTT Data{% endblock %}
+{% block nav_clientes %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">business</span>{% trans "Clientes" %}</h1>
+  </div>
+  <div class="page-header-actions">
+    {% if user.role in 'diretor,gestor' %}
+    <a href="{% url 'clientes-create' %}" class="btn btn-primary"><span class="material-icons-outlined">add</span>{% trans "Novo Cliente" %}</a>
+    {% endif %}
+  </div>
+</div>
+<div class="filter-bar">
+  <form method="get" style="display:contents;">
+    <div class="filter-group" style="flex:1;">
+      <label>{% trans "Busca" %}</label>
+      <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Nome, CNPJ...">
+    </div>
+    <button type="submit" class="btn btn-primary"><span class="material-icons-outlined">search</span>{% trans "Filtrar" %}</button>
+    <a href="{% url 'clientes-list' %}" class="btn btn-outline"><span class="material-icons-outlined">clear</span>{% trans "Limpar" %}</a>
+  </form>
+</div>
+<div class="card">
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>{% trans "Nome" %}</th><th>CNPJ</th><th>{% trans "Responsável NTT" %}</th><th style="text-align:right;">{% trans "Ações" %}</th></tr></thead>
+      <tbody>
+        {% for obj in clientes %}
+        <tr>
+          <td><span style="font-weight:500;">{{ obj.nome }}</span></td>
+          <td style="font-size:.85rem;color:var(--gray-500);">{{ obj.cnpj }}</td>
+          <td style="font-size:.85rem;">{{ obj.resp_nttdata }}</td>
+          <td><div class="td-actions">
+            <a href="{% url 'clientes-detail' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined">visibility</span></a>
+            {% if user.role in 'diretor,gestor' %}
+            <a href="{% url 'clientes-update' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined">edit</span></a>
+            <a href="{% url 'clientes-delete' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined" style="color:var(--danger);">delete</span></a>
+            {% endif %}
+          </div></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4"><div class="empty-state"><span class="material-icons-outlined">business</span><h3>{% trans "Nenhum cliente encontrado." %}</h3></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

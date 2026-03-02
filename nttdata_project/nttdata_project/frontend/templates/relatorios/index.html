@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Relatórios" %} — NTT Data{% endblock %}
+{% block nav_relatorios %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">bar_chart</span>{% trans "Relatórios" %}</h1>
+    <p class="breadcrumb">{% trans "Exportação de dados em CSV e PDF" %}</p>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;">
+
+  <!-- Colaboradores -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <span class="material-icons-outlined">people_alt</span>{% trans "Colaboradores" %}
+      </div>
+    </div>
+    <div class="card-body">
+      <p style="font-size:.8125rem;color:var(--gray-500);margin-bottom:1.25rem;">
+        {% trans "Lista completa de colaboradores ativos com dados profissionais e hierarquia." %}
+      </p>
+      <div style="display:flex;gap:.5rem;">
+        <a href="/api/v1/relatorios/colaboradores/csv/" class="btn btn-outline btn-sm" style="flex:1;justify-content:center;">
+          <span class="material-icons-outlined">table_view</span>CSV
+        </a>
+        <a href="/api/v1/relatorios/colaboradores/pdf/" class="btn btn-primary btn-sm" style="flex:1;justify-content:center;">
+          <span class="material-icons-outlined">picture_as_pdf</span>PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projetos -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <span class="material-icons-outlined">work_outline</span>{% trans "Projetos" %}
+      </div>
+    </div>
+    <div class="card-body">
+      <p style="font-size:.8125rem;color:var(--gray-500);margin-bottom:1.25rem;">
+        {% trans "Projetos ativos com indicadores de alocação e situação contratual." %}
+      </p>
+      <div style="display:flex;gap:.5rem;">
+        <a href="/api/v1/relatorios/projetos/csv/" class="btn btn-outline btn-sm" style="flex:1;justify-content:center;">
+          <span class="material-icons-outlined">table_view</span>CSV
+        </a>
+        <a href="/api/v1/relatorios/projetos/pdf/" class="btn btn-primary btn-sm" style="flex:1;justify-content:center;">
+          <span class="material-icons-outlined">picture_as_pdf</span>PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alocações -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <span class="material-icons-outlined">assignment_ind</span>{% trans "Alocações Ativas" %}
+      </div>
+    </div>
+    <div class="card-body">
+      <p style="font-size:.8125rem;color:var(--gray-500);margin-bottom:1.25rem;">
+        {% trans "Colaboradores alocados em projetos com squad, função e centro de custo." %}
+      </p>
+      <div style="display:flex;gap:.5rem;">
+        <a href="/api/v1/relatorios/alocacoes/csv/" class="btn btn-outline btn-sm" style="flex:1;justify-content:center;">
+          <span class="material-icons-outlined">table_view</span>CSV
+        </a>
+        <a href="/api/v1/relatorios/alocacoes/pdf/" class="btn btn-primary btn-sm" style="flex:1;justify-content:center;">
+          <span class="material-icons-outlined">picture_as_pdf</span>PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notebooks -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <span class="material-icons-outlined">laptop_mac</span>{% trans "Notebooks" %}
+      </div>
+    </div>
+    <div class="card-body">
+      <p style="font-size:.8125rem;color:var(--gray-500);margin-bottom:1.25rem;">
+        {% trans "Inventário de notebooks com origem, responsável e localização." %}
+      </p>
+      <div style="display:flex;gap:.5rem;">
+        <a href="/api/v1/relatorios/notebooks/csv/" class="btn btn-outline btn-sm" style="flex:1;justify-content:center;">
+          <span class="material-icons-outlined">table_view</span>CSV
+        </a>
+        <a href="/api/v1/relatorios/notebooks/pdf/" class="btn btn-primary btn-sm" style="flex:1;justify-content:center;">
+          <span class="material-icons-outlined">picture_as_pdf</span>PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

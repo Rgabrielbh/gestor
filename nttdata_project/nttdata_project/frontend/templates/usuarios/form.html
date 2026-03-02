@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ titulo }} — NTT Data{% endblock %}
+{% block nav_usuarios %}active{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">manage_accounts</span>{{ titulo }}</h1>
+    <div class="breadcrumb">
+      <a href="{% url 'usuarios-list' %}" style="color:var(--gray-500);text-decoration:none;">{% trans "Usuários" %}</a>
+      <span class="material-icons-outlined" style="font-size:12px;">chevron_right</span>
+      {{ titulo }}
+    </div>
+  </div>
+  <div class="page-header-actions">
+    <a href="{% url 'usuarios-list' %}" class="btn btn-outline">
+      <span class="material-icons-outlined">arrow_back</span>{% trans "Voltar" %}
+    </a>
+  </div>
+</div>
+
+<div style="max-width:860px;">
+<form method="post" novalidate>
+{% csrf_token %}
+<div class="card" style="margin-bottom:1rem;">
+  <div class="card-header">
+    <div class="card-header-left">
+      <span class="material-icons-outlined">person</span>{% trans "Dados de Acesso" %}
+    </div>
+  </div>
+  <div class="card-body">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+      <div class="form-group" style="grid-column:1/-1;">
+        <label class="form-label">{% trans "Nome completo" %} <span style="color:var(--danger);">*</span></label>
+        {{ form.nome }}
+        {% if form.nome.errors %}<div class="invalid-feedback">{{ form.nome.errors|join:", " }}</div>{% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "Usuário" %} <span style="color:var(--danger);">*</span></label>
+        {{ form.username }}
+        {% if form.username.errors %}<div class="invalid-feedback">{{ form.username.errors|join:", " }}</div>{% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "E-mail" %} <span style="color:var(--danger);">*</span></label>
+        {{ form.email }}
+        {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors|join:", " }}</div>{% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "Perfil" %}</label>
+        {{ form.role }}
+        {% if form.role.errors %}<div class="invalid-feedback">{{ form.role.errors|join:", " }}</div>{% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "Status" %}</label>
+        {{ form.status }}
+        {% if form.status.errors %}<div class="invalid-feedback">{{ form.status.errors|join:", " }}</div>{% endif %}
+      </div>
+      {% if form.is_active %}
+      <div class="form-group" style="display:flex;align-items:center;gap:.5rem;padding-top:1.5rem;">
+        {{ form.is_active }}
+        <label class="form-label" style="margin:0;">{% trans "Conta habilitada (acesso ao sistema)" %}</label>
+      </div>
+      {% endif %}
+      {% if form.password1 %}
+      <div class="form-group">
+        <label class="form-label">{% trans "Senha" %} <span style="color:var(--danger);">*</span></label>
+        {{ form.password1 }}
+        {% if form.password1.errors %}<div class="invalid-feedback">{{ form.password1.errors|join:", " }}</div>{% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "Confirmar senha" %} <span style="color:var(--danger);">*</span></label>
+        {{ form.password2 }}
+        {% if form.password2.errors %}<div class="invalid-feedback">{{ form.password2.errors|join:", " }}</div>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:1rem;">
+  <div class="card-header">
+    <div class="card-header-left">
+      <span class="material-icons-outlined">work</span>{% trans "Dados Profissionais" %}
+    </div>
+  </div>
+  <div class="card-body">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+      <div class="form-group">
+        <label class="form-label">{% trans "Matrícula" %}</label>
+        {{ form.matricula }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "Gestor direto" %}</label>
+        {{ form.gestor_direto }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "Cargo" %}</label>
+        {{ form.cargo }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "Função" %}</label>
+        {{ form.funcao }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "Telefone" %}</label>
+        {{ form.telefone }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "Data de admissão" %}</label>
+        {{ form.dt_admissao }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "Cidade" %}</label>
+        {{ form.cidade }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">{% trans "Estado" %} (UF)</label>
+        {{ form.estado }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if form.errors %}
+<div style="padding:.75rem 1rem;background:#fef2f2;border-left:3px solid var(--danger);border-radius:var(--radius);margin-bottom:1rem;color:#991b1b;font-size:.875rem;">
+  <strong>{% trans "Corrija os erros abaixo:" %}</strong>
+  {% for field in form %}{% for error in field.errors %}<div>{{ field.label }}: {{ error }}</div>{% endfor %}{% endfor %}
+  {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+</div>
+{% endif %}
+
+<div style="display:flex;gap:.75rem;">
+  <button type="submit" class="btn btn-primary">
+    <span class="material-icons-outlined">save</span>{{ action }}
+  </button>
+  <a href="{% url 'usuarios-list' %}" class="btn btn-outline">{% trans "Cancelar" %}</a>
+</div>
+</form>
+</div>
+{% endblock %}

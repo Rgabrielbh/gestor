@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ contrato.codigo }} — NTT Data{% endblock %}
+{% block nav_contratos %}active{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">description</span>{{ contrato.codigo }}</h1>
+    <div class="breadcrumb">
+      <a href="{% url 'contratos-list' %}" style="color:var(--gray-500);text-decoration:none;">{% trans "Contratos" %}</a>
+      <span class="material-icons" style="font-size:14px;">chevron_right</span>
+      {{ contrato.codigo }}
+    </div>
+  </div>
+  <div class="page-header-actions">
+    {% if user.role in "diretor,gestor" %}
+    <a href="{% url 'contratos-update' contrato.pk %}" class="btn btn-outline">
+      <span class="material-icons-outlined">edit</span>{% trans "Editar" %}
+    </a>
+    {% endif %}
+    <a href="{% url 'contratos-list' %}" class="btn btn-outline">
+      <span class="material-icons-outlined">arrow_back</span>{% trans "Voltar" %}
+    </a>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:300px 1fr;gap:1rem;align-items:start;">
+
+  <div class="card">
+    <div style="background:linear-gradient(135deg,#0A1628 0%,#0057A8 100%);padding:1.5rem 1.25rem;border-radius:var(--radius) var(--radius) 0 0;text-align:center;">
+      <div style="width:56px;height:56px;border-radius:14px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;margin:0 auto .875rem;">
+        <span class="material-icons-outlined" style="color:#fff;font-size:28px;">description</span>
+      </div>
+      <div style="font-size:1.1rem;font-weight:700;color:#fff;">{{ contrato.codigo }}</div>
+      <div style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 .75rem;">{{ contrato.cliente.nome }}</div>
+      {% if contrato.ativo %}
+      <span class="badge badge-success">{% trans "Vigente" %}</span>
+      {% else %}
+      <span class="badge badge-danger">{% trans "Encerrado" %}</span>
+      {% endif %}
+      {% if contrato.renova %}
+      <span class="badge badge-info" style="margin-left:.35rem;">{% trans "Renovável" %}</span>
+      {% endif %}
+    </div>
+    <div class="card-body" style="padding:1rem;">
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;border-bottom:1px solid var(--gray-100);">
+        <span style="color:var(--gray-400);">{% trans "Cliente" %}</span>
+        <a href="{% url 'clientes-detail' contrato.cliente.pk %}" style="font-weight:600;color:var(--ntt-blue);text-decoration:none;">{{ contrato.cliente.nome }}</a>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;border-bottom:1px solid var(--gray-100);">
+        <span style="color:var(--gray-400);">{% trans "Início" %}</span>
+        <span style="font-weight:600;">{{ contrato.dt_inicio|date:"d/m/Y" }}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;border-bottom:1px solid var(--gray-100);">
+        <span style="color:var(--gray-400);">{% trans "Término" %}</span>
+        <span style="font-weight:600;">{{ contrato.dt_fim|date:"d/m/Y" }}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;border-bottom:1px solid var(--gray-100);">
+        <span style="color:var(--gray-400);">FTE</span>
+        <span style="font-weight:600;color:var(--ntt-blue);">{{ contrato.fte }}</span>
+      </div>
+      {% if contrato.resp_cliente %}
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;border-bottom:1px solid var(--gray-100);">
+        <span style="color:var(--gray-400);">{% trans "Resp. cliente" %}</span>
+        <span style="font-weight:600;">{{ contrato.resp_cliente }}</span>
+      </div>
+      {% endif %}
+      {% if contrato.ov_anterior %}
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;">
+        <span style="color:var(--gray-400);">{% trans "OV anterior" %}</span>
+        <span style="font-weight:600;">{{ contrato.ov_anterior }}</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:1rem;">
+
+    {% if contrato.descricao %}
+    <div class="card">
+      <div class="card-header"><div class="card-header-left"><span class="material-icons-outlined">notes</span>{% trans "Descrição" %}</div></div>
+      <div class="card-body"><p style="font-size:.875rem;color:var(--gray-700);margin:0;line-height:1.6;">{{ contrato.descricao }}</p></div>
+    </div>
+    {% endif %}
+
+    <div class="card">
+      <div class="card-header"><div class="card-header-left"><span class="material-icons-outlined">timeline</span>{% trans "Vigência" %}</div></div>
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;">
+            <div style="font-size:.72rem;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem;">{% trans "Período" %}</div>
+            <div style="font-size:.9rem;font-weight:600;color:var(--gray-800);">
+              {{ contrato.dt_inicio|date:"d/m/Y" }} → {{ contrato.dt_fim|date:"d/m/Y" }}
+            </div>
+          </div>
+          <div style="text-align:center;padding:.75rem 1.25rem;border-radius:var(--radius);{% if contrato.ativo %}background:#dcfce7;{% else %}background:var(--gray-100);{% endif %}">
+            <div style="font-size:.72rem;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.2rem;">Status</div>
+            <div style="font-size:.95rem;font-weight:700;{% if contrato.ativo %}color:#16a34a;{% else %}color:var(--gray-500);{% endif %}">
+              {% if contrato.ativo %}{% trans "Vigente" %}{% else %}{% trans "Encerrado" %}{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if projetos %}
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-left"><span class="material-icons-outlined">work_outline</span>{% trans "Projetos vinculados" %}</div>
+        <span class="badge badge-info">{{ projetos|length }}</span>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>{% trans "Projeto" %}</th>
+              <th>{% trans "OV" %}</th>
+              <th>{% trans "Ocupação" %}</th>
+              <th>{% trans "Status" %}</th>
+              <th style="text-align:right;">{% trans "Ações" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in projetos %}
+            <tr>
+              <td style="font-weight:500;">{{ p.nome_proj_ntt }}</td>
+              <td style="font-size:.8rem;color:var(--gray-500);">{{ p.ov|default:"—" }}</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:.5rem;">
+                  <div class="progress" style="width:70px;"><div class="progress-bar" style="width:{{ p.percentual_alocacao }}%;"></div></div>
+                  <span style="font-size:.75rem;color:var(--gray-500);">{{ p.percentual_alocacao }}%</span>
+                </div>
+              </td>
+              <td>
+                {% if p.ativo %}<span class="badge badge-success">{% trans "Ativo" %}</span>
+                {% else %}<span class="badge badge-secondary">{% trans "Encerrado" %}</span>{% endif %}
+              </td>
+              <td>
+                <div class="td-actions">
+                  <a href="{% url 'projetos-detail' p.pk %}" class="btn btn-icon btn-outline btn-sm">
+                    <span class="material-icons-outlined">visibility</span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% else %}
+    <div class="card">
+      <div class="empty-state" style="padding:2rem;">
+        <span class="material-icons-outlined">work_outline</span>
+        <h3>{% trans "Nenhum projeto vinculado a este contrato." %}</h3>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

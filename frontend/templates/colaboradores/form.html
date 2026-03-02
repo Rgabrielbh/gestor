@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ titulo }} — NTT Data{% endblock %}
+{% block nav_colaboradores %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">person</span>{{ titulo }}</h1>
+  </div>
+</div>
+<div class="card" style="max-width:900px;margin:0 auto;">
+  <div class="card-header"><div class="card-header-left"><span class="material-icons-outlined">edit</span>{{ titulo }}</div></div>
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+        {% for field in form %}
+          <div class="form-group {% if field.field.widget.input_type == "textarea" %}grid-col-2{% endif %}">
+            <label class="form-label">{{ field.label }}{% if field.field.required %} <span style="color:var(--ntt-red);">*</span>{% endif %}</label>
+            {{ field }}
+            {% if field.errors %}<div class="invalid-feedback"><span class="material-icons" style="font-size:14px;">error</span>{{ field.errors|join:", " }}</div>{% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      <div style="display:flex;gap:.5rem;margin-top:1.25rem;border-top:1px solid var(--gray-200);padding-top:1.25rem;">
+        <a href="{% url "colaboradores-list" %}" class="btn btn-outline">
+          <span class="material-icons-outlined">arrow_back</span>{% trans "Cancelar" %}
+        </a>
+        <button type="submit" class="btn btn-primary">
+          <span class="material-icons">save</span>{{ action }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

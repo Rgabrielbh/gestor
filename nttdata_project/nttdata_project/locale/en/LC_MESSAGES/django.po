@@ -1,0 +1,670 @@
+# NTT Data Gestão translations
+# Language: en
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+
+msgid "API Docs"
+msgstr "API Docs"
+
+msgid "Acessar sua conta"
+msgstr "Access your account"
+
+msgid "Adicionar"
+msgstr "Add"
+
+msgid "Administração"
+msgstr "Administration"
+
+msgid "Admissão"
+msgstr "Hire Date"
+
+msgid "Admissões do Mês"
+msgstr "Monthly Hires"
+
+msgid "Afastado"
+msgstr "On Leave"
+
+msgid "Alocado"
+msgstr "Allocated"
+
+msgid "Alocar"
+msgstr "Allocate"
+
+msgid "Alocar Colaborador"
+msgstr "Allocate Employee"
+
+msgid "Alocações Ativas"
+msgstr "Active Allocations"
+
+msgid "Alocações ativas"
+msgstr "Active allocations"
+
+msgid "Alocações por Projeto"
+msgstr "Allocations by Project"
+
+msgid "Alterar Senha"
+msgstr "Change Password"
+
+msgid "Alterar senha"
+msgstr "Change password"
+
+msgid "Análises"
+msgstr "Analytics"
+
+msgid "Atenção"
+msgstr "Warning"
+
+msgid "Ativo"
+msgstr "Active"
+
+msgid "Atual"
+msgstr "Current"
+
+msgid "Atualizar"
+msgstr "Update"
+
+msgid "Ação"
+msgstr "Action"
+
+msgid "Ações"
+msgstr "Actions"
+
+msgid "Bem-vindo de volta"
+msgstr "Welcome back"
+
+msgid "Busca"
+msgstr "Search"
+
+msgid "Buscar"
+msgstr "Search"
+
+msgid "Cadastrar"
+msgstr "Register"
+
+msgid "Cadastrar Colaborador"
+msgstr "Register Employee"
+
+msgid "Cancelar"
+msgstr "Cancel"
+
+msgid "Cargo"
+msgstr "Position"
+
+msgid "Centro de Custo"
+msgstr "Cost Center"
+
+msgid "Cliente"
+msgstr "Client"
+
+msgid "Clientes"
+msgstr "Clients"
+
+msgid "Colaborador"
+msgstr "Employee"
+
+msgid "Colaboradores"
+msgstr "Employees"
+
+msgid "Colaboradores Alocados"
+msgstr "Allocated Employees"
+
+msgid "Colaboradores Ativos"
+msgstr "Active Employees"
+
+msgid "Colaboradores alocados em projetos com squad, função e centro de custo."
+msgstr "Employees allocated to projects with squad, role and cost center."
+
+msgid "Colaboradores encontrados"
+msgstr "Employees found"
+
+msgid "Colaboradores no Projeto"
+msgstr "Project Employees"
+
+msgid "Confirmar Exclusão"
+msgstr "Confirm Deletion"
+
+msgid "Confirmar exclusão"
+msgstr "Confirm deletion"
+
+msgid "Confirmar senha"
+msgstr "Confirm password"
+
+msgid "Contrato"
+msgstr "Contract"
+
+msgid "Contrato pendente"
+msgstr "Pending contract"
+
+msgid "Contratos"
+msgstr "Contracts"
+
+msgid "Contratos Vencendo em 60 Dias"
+msgstr "Contracts Expiring in 60 Days"
+
+msgid "Contratos Vigentes"
+msgstr "Active Contracts"
+
+msgid "Controle centralizado de equipes, alocações, contratos e ativos tecnológicos."
+msgstr "Centralized control of teams, allocations, contracts and technology assets."
+
+msgid "Dados Profissionais"
+msgstr "Professional Data"
+
+msgid "Dados do Cliente"
+msgstr "Client Data"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Dedicação"
+msgstr "Dedication"
+
+msgid "Dedicação integral"
+msgstr "Full dedication"
+
+msgid "Dedicação parcial"
+msgstr "Partial dedication"
+
+msgid "Demissão"
+msgstr "Termination"
+
+msgid "Descrição"
+msgstr "Description"
+
+msgid "Desde:"
+msgstr "Since:"
+
+msgid "Detalhes"
+msgstr "Details"
+
+msgid "Diretor"
+msgstr "Director"
+
+msgid "Diretor > Gestor > Gerente > Operador"
+msgstr "Director > Manager > Supervisor > Operator"
+
+msgid "Distribuição do Dia de Trabalho"
+msgstr "Daily Work Distribution"
+
+msgid "E-mail"
+msgstr "E-mail"
+
+msgid "Editar"
+msgstr "Edit"
+
+msgid "Editar Cliente"
+msgstr "Edit Client"
+
+msgid "Editar Contrato"
+msgstr "Edit Contract"
+
+msgid "Editar Informações"
+msgstr "Edit Information"
+
+msgid "Editar Notebook"
+msgstr "Edit Notebook"
+
+msgid "Editar Projeto"
+msgstr "Edit Project"
+
+msgid "Encerrado"
+msgstr "Closed"
+
+msgid "English"
+msgstr "English"
+
+msgid "Entrar"
+msgstr "Sign In"
+
+msgid "Español"
+msgstr "Spanish"
+
+msgid "Especificações"
+msgstr "Specifications"
+
+msgid "Esta ação não pode ser desfeita."
+msgstr "This action cannot be undone."
+
+msgid "Excluir"
+msgstr "Delete"
+
+msgid "Exportar CSV"
+msgstr "Export CSV"
+
+msgid "Exportar PDF"
+msgstr "Export PDF"
+
+msgid "FTE"
+msgstr "FTE"
+
+msgid "Filtrar"
+msgstr "Filter"
+
+msgid "Função"
+msgstr "Role"
+
+msgid "Gerado em"
+msgstr "Generated on"
+
+msgid "Gerente"
+msgstr "Supervisor"
+
+msgid "Gestor"
+msgstr "Manager"
+
+msgid "Gestores do Projeto"
+msgstr "Project Managers"
+
+msgid "Gestão"
+msgstr "Management"
+
+msgid "Gestão de Usuários"
+msgstr "User Management"
+
+msgid "Histórico de Alocações"
+msgstr "Allocation History"
+
+msgid "Histórico de Responsáveis"
+msgstr "Custodian History"
+
+msgid "Horas por dia"
+msgstr "Hours per day"
+
+msgid "Idioma"
+msgstr "Language"
+
+msgid "Inativo"
+msgstr "Inactive"
+
+msgid "Informações"
+msgstr "Information"
+
+msgid "Início"
+msgstr "Start"
+
+msgid "Jornada completa"
+msgstr "Full day"
+
+msgid "Jornada diária"
+msgstr "Daily workday"
+
+msgid "Jornada diária (8h = 100%)"
+msgstr "Daily workday (8h = 100%)"
+
+msgid "Limpar"
+msgstr "Clear"
+
+msgid "Local"
+msgstr "Location"
+
+msgid "Localidade"
+msgstr "Location"
+
+msgid "Localização"
+msgstr "Location"
+
+msgid "Marca"
+msgstr "Brand"
+
+msgid "Matrícula"
+msgstr "Employee ID"
+
+msgid "Meio período"
+msgstr "Half day"
+
+msgid "Meu Perfil"
+msgstr "My Profile"
+
+msgid "Modelo"
+msgstr "Model"
+
+msgid "Nenhum colaborador alocado neste projeto."
+msgstr "No employees allocated to this project."
+
+msgid "Nenhum colaborador encontrado"
+msgstr "No employees found"
+
+msgid "Nenhum colaborador registrado neste projeto."
+msgstr "No employees registered in this project."
+
+msgid "Nenhum histórico registrado para este notebook."
+msgstr "No history recorded for this notebook."
+
+msgid "Nenhum projeto vinculado a este contrato."
+msgstr "No projects linked to this contract."
+
+msgid "Nenhum resultado para"
+msgstr "No results for"
+
+msgid "Nenhuma alocação registrada."
+msgstr "No allocations recorded."
+
+msgid "Nome"
+msgstr "Name"
+
+msgid "Nome do projeto ou cliente"
+msgstr "Project or client name"
+
+msgid "Nome ou matrícula do colaborador"
+msgstr "Employee name or ID"
+
+msgid "Nome, e-mail, matrícula..."
+msgstr "Name, email, employee ID..."
+
+msgid "Notebook"
+msgstr "Notebook"
+
+msgid "Notebooks"
+msgstr "Notebooks"
+
+msgid "Nova senha"
+msgstr "New password"
+
+msgid "Novo Cliente"
+msgstr "New Client"
+
+msgid "Novo Colaborador"
+msgstr "New Employee"
+
+msgid "Novo Contrato"
+msgstr "New Contract"
+
+msgid "Novo Notebook"
+msgstr "New Notebook"
+
+msgid "Novo Projeto"
+msgstr "New Project"
+
+msgid "Novo Usuário"
+msgstr "New User"
+
+msgid "Nº de Série"
+msgstr "Serial No."
+
+msgid "OV"
+msgstr "OV"
+
+msgid "OV anterior"
+msgstr "Previous OV"
+
+msgid "Observações"
+msgstr "Notes"
+
+msgid "Ocupação"
+msgstr "Occupancy"
+
+msgid "Operador"
+msgstr "Operator"
+
+msgid "Origem"
+msgstr "Origin"
+
+msgid "Pat. Cliente"
+msgstr "Pat. Cliente"
+
+msgid "Pat. NTT"
+msgstr "Pat. NTT"
+
+msgid "Patrimônio Cliente"
+msgstr "Client Asset"
+
+msgid "Patrimônio NTT"
+msgstr "NTT Asset"
+
+msgid "Perfil"
+msgstr "Profile"
+
+msgid "Período"
+msgstr "Period"
+
+msgid "Por Colaborador"
+msgstr "By Employee"
+
+msgid "Por Projeto"
+msgstr "By Project"
+
+msgid "Português"
+msgstr "Portuguese"
+
+msgid "Previsto"
+msgstr "Planned"
+
+msgid "Principal"
+msgstr "Main"
+
+msgid "Projeto"
+msgstr "Project"
+
+msgid "Projeto Atual"
+msgstr "Current Project"
+
+msgid "Projetos"
+msgstr "Projects"
+
+msgid "Projetos Ativos"
+msgstr "Active Projects"
+
+msgid "Projetos encontrados — clique para ver a timeline"
+msgstr "Projects found — click to view timeline"
+
+msgid "Projetos vinculados"
+msgstr "Linked projects"
+
+msgid "Relatório de Alocações Ativas"
+msgstr "Active Allocations Report"
+
+msgid "Relatório de Colaboradores"
+msgstr "Employee Report"
+
+msgid "Relatório de Notebooks"
+msgstr "Notebooks Report"
+
+msgid "Relatórios"
+msgstr "Reports"
+
+msgid "Renovável"
+msgstr "Renewable"
+
+msgid "Resp. cliente"
+msgstr "Client contact"
+
+msgid "Responsável"
+msgstr "Responsible"
+
+msgid "Sair"
+msgstr "Log Out"
+
+msgid "Salvar"
+msgstr "Save"
+
+msgid "Sem responsável"
+msgstr "No responsible"
+
+msgid "Senha"
+msgstr "Password"
+
+msgid "Squad"
+msgstr "Squad"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Suporte pontual"
+msgstr "Occasional support"
+
+msgid "Tem certeza que deseja excluir"
+msgstr "Are you sure you want to delete"
+
+msgid "Tente ajustar os filtros de busca."
+msgstr "Try adjusting the search filters."
+
+msgid "Tente um termo diferente."
+msgstr "Try a different term."
+
+msgid "Timeline"
+msgstr "Timeline"
+
+msgid "Timeline Colaboradores"
+msgstr "Employees Timeline"
+
+msgid "Timeline Notebooks"
+msgstr "Notebooks Timeline"
+
+msgid "Todos"
+msgstr "All"
+
+msgid "Total colaboradores"
+msgstr "Total employees"
+
+msgid "Total de registros"
+msgstr "Total records"
+
+msgid "Término"
+msgstr "End"
+
+msgid "Usuário ou e-mail"
+msgstr "Username or email"
+
+msgid "Usuários"
+msgstr "Users"
+
+msgid "Ver timeline"
+msgstr "View timeline"
+
+msgid "Vigente"
+msgstr "Active"
+
+msgid "Vigência"
+msgstr "Validity"
+
+msgid "Visualizar"
+msgstr "View"
+
+msgid "Voltar"
+msgstr "Back"
+
+msgid "Voltar à Timeline"
+msgstr "Back to Timeline"
+
+msgid "da jornada"
+msgstr "of the workday"
+
+msgid "pessoa(s)"
+msgstr "person(s)"
+
+msgid "por dia"
+msgstr "per day"
+
+msgid "presente"
+msgstr "present"
+
+msgid "projeto(s)"
+msgstr "project(s)"
+
+msgid "Usuário"
+msgstr "Username"
+
+msgid "Usuários do Sistema"
+msgstr "System Users"
+
+msgid "usuário(s)"
+msgstr "user(s)"
+
+msgid "Nenhum usuário encontrado"
+msgstr "No users found"
+
+msgid "Nome, e-mail, usuário, matrícula..."
+msgstr "Name, email, username, ID..."
+
+msgid "Habilitado"
+msgstr "Enabled"
+
+msgid "Bloqueado"
+msgstr "Blocked"
+
+msgid "Redefinir senha"
+msgstr "Reset password"
+
+msgid "Redefinir"
+msgstr "Reset"
+
+msgid "Redefinir Senha"
+msgstr "Reset Password"
+
+msgid "Excluir Usuário"
+msgstr "Delete User"
+
+msgid "Conta habilitada (acesso ao sistema)"
+msgstr "Account enabled (system access)"
+
+msgid "Corrija os erros abaixo:"
+msgstr "Fix the errors below:"
+
+msgid "Sim, excluir"
+msgstr "Yes, delete"
+
+msgid "Mínimo 8 caracteres"
+msgstr "Minimum 8 characters"
+
+msgid "Repita a senha"
+msgstr "Repeat password"
+
+msgid "As senhas não coincidem."
+msgstr "Passwords do not match."
+
+msgid "A senha deve ter pelo menos 8 caracteres."
+msgstr "Password must be at least 8 characters."
+
+msgid "Acesso restrito a gestores."
+msgstr "Access restricted to managers."
+
+msgid "Você não pode excluir sua própria conta."
+msgstr "You cannot delete your own account."
+
+msgid "Dados de Acesso"
+msgstr "Access Data"
+
+msgid "Nome completo"
+msgstr "Full name"
+
+msgid "Perfil de acesso"
+msgstr "Access profile"
+
+msgid "Gestor direto"
+msgstr "Direct manager"
+
+msgid "Telefone"
+msgstr "Phone"
+
+msgid "Cidade"
+msgstr "City"
+
+msgid "Estado"
+msgstr "State"
+
+msgid "Data de admissão"
+msgstr "Hire date"
+
+msgid "Tem certeza que deseja excluir o usuário"
+msgstr "Are you sure you want to delete user"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Acesso"
+msgstr "Access"
+
+msgid "Esqueci minha senha"
+msgstr "Forgot my password"
+
+msgid "Gestão de Colaboradores e Projetos"
+msgstr "Employee and Project Management"
+
+msgid "Informe suas credenciais para acessar o sistema."
+msgstr "Enter your credentials to access the system."
+
+msgid "Manter conectado"
+msgstr "Keep me signed in"

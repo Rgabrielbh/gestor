@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Excluir Usuário" %} — NTT Data{% endblock %}
+{% block nav_usuarios %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">delete</span>{% trans "Excluir Usuário" %}</h1>
+  </div>
+  <div class="page-header-actions">
+    <a href="{% url 'usuarios-list' %}" class="btn btn-outline">
+      <span class="material-icons-outlined">arrow_back</span>{% trans "Voltar" %}
+    </a>
+  </div>
+</div>
+<div style="max-width:520px;">
+  <div class="card">
+    <div class="card-body" style="text-align:center;padding:2rem;">
+      <div style="width:64px;height:64px;border-radius:50%;background:#fef2f2;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+        <span class="material-icons-outlined" style="font-size:32px;color:var(--danger);">warning</span>
+      </div>
+      <h3 style="font-size:1.1rem;font-weight:700;color:var(--gray-900);margin-bottom:.5rem;">{% trans "Confirmar exclusão" %}</h3>
+      <p style="color:var(--gray-600);font-size:.875rem;margin-bottom:.25rem;">
+        {% trans "Tem certeza que deseja excluir o usuário" %} <strong>{{ usuario.nome }}</strong>?
+      </p>
+      <p style="color:var(--danger);font-size:.8rem;margin-bottom:1.5rem;">{% trans "Esta ação não pode ser desfeita." %}</p>
+      <div style="background:var(--gray-50);border-radius:var(--radius);padding:.75rem;margin-bottom:1.5rem;text-align:left;">
+        <div style="font-size:.8rem;color:var(--gray-500);">{% trans "Login" %}: <strong>{{ usuario.username }}</strong></div>
+        <div style="font-size:.8rem;color:var(--gray-500);">{% trans "E-mail" %}: <strong>{{ usuario.email }}</strong></div>
+        <div style="font-size:.8rem;color:var(--gray-500);">{% trans "Perfil" %}: <strong>{{ usuario.get_role_display }}</strong></div>
+      </div>
+      <div style="display:flex;gap:.75rem;justify-content:center;">
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger" style="background:var(--danger);color:#fff;">
+            <span class="material-icons-outlined">delete</span>{% trans "Sim, excluir" %}
+          </button>
+        </form>
+        <a href="{% url 'usuarios-list' %}" class="btn btn-outline">{% trans "Cancelar" %}</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

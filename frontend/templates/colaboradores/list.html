@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Colaboradores" %} — NTT Data{% endblock %}
+{% block nav_colaboradores %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">people_alt</span>{% trans "Colaboradores" %}</h1>
+    <div class="breadcrumb"><span class="material-icons-outlined" style="font-size:14px;">home</span> NTT Data</div>
+  </div>
+  <div class="page-header-actions">
+    {% if user.role in "diretor,gestor" %}
+    <a href="{% url "register" %}" class="btn btn-primary">
+      <span class="material-icons-outlined">person_add</span>{% trans "Novo Colaborador" %}
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="filter-bar">
+  <form method="get" style="display:contents;">
+    <div class="filter-group" style="flex:1;">
+      <label>{% trans "Busca" %}</label>
+      <input type="text" name="q" value="{{ q }}" class="form-control"
+             placeholder="{% trans "Nome, e-mail, matrícula..." %}">
+    </div>
+    <div class="filter-group">
+      <label>{% trans "Perfil" %}</label>
+      <select name="role" class="form-select">
+        <option value="">{% trans "Todos" %}</option>
+        {% for value, label in roles %}
+          <option value="{{ value }}" {% if request.GET.role == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">
+      <span class="material-icons-outlined">search</span>{% trans "Filtrar" %}
+    </button>
+    <a href="{% url "colaboradores-list" %}" class="btn btn-outline">
+      <span class="material-icons-outlined">clear</span>{% trans "Limpar" %}
+    </a>
+  </form>
+</div>
+
+<div class="card">
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Colaborador" %}</th>
+          <th>{% trans "Cargo / Função" %}</th>
+          <th>{% trans "Perfil" %}</th>
+          <th>{% trans "Status" %}</th>
+          <th>{% trans "Localidade" %}</th>
+          <th>{% trans "Admissão" %}</th>
+          <th style="text-align:right;">{% trans "Ações" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in colaboradores %}
+        <tr>
+          <td>
+            <div class="user-row">
+              {% if c.avatar %}
+                <img src="{{ c.avatar.url }}" class="avatar avatar-md" />
+              {% else %}
+                <div class="avatar avatar-md avatar-blue">{{ c.nome|first|upper }}</div>
+              {% endif %}
+              <div class="user-row-info">
+                <span class="user-row-name">{{ c.nome }}</span>
+                <span class="user-row-sub">{{ c.email }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="font-size:.875rem;">{{ c.cargo|default:"—" }}</div>
+            {% if c.funcao %}<div style="font-size:.75rem;color:var(--gray-500);">{{ c.funcao }}</div>{% endif %}
+          </td>
+          <td><span class="badge badge-role-{{ c.role }}">{{ c.get_role_display }}</span></td>
+          <td>
+            {% if c.status == "ativo" %}<span class="badge badge-success"><span class="material-icons" style="font-size:12px;">check_circle</span>{% trans "Ativo" %}</span>
+            {% elif c.status == "inativo" %}<span class="badge badge-secondary"><span class="material-icons" style="font-size:12px;">cancel</span>{% trans "Inativo" %}</span>
+            {% else %}<span class="badge badge-warning"><span class="material-icons" style="font-size:12px;">pause_circle</span>{% trans "Afastado" %}</span>
+            {% endif %}
+          </td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ c.cidade|default:"—" }}{% if c.estado %}/{{ c.estado }}{% endif %}</td>
+          <td style="font-size:.8rem;color:var(--gray-500);white-space:nowrap;">{{ c.dt_admissao|date:"d/m/Y"|default:"—" }}</td>
+          <td>
+            <div class="td-actions">
+              <a href="{% url "colaboradores-detail" c.pk %}" class="btn btn-icon btn-outline" title="{% trans "Visualizar" %}">
+                <span class="material-icons-outlined">visibility</span>
+              </a>
+              {% if user.role in "diretor,gestor" %}
+              <a href="{% url "colaboradores-update" c.pk %}" class="btn btn-icon btn-outline" title="{% trans "Editar" %}">
+                <span class="material-icons-outlined">edit</span>
+              </a>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7">
+            <div class="empty-state">
+              <span class="material-icons-outlined">people</span>
+              <h3>{% trans "Nenhum colaborador encontrado" %}</h3>
+              <p>{% trans "Tente ajustar os filtros de busca." %}</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if is_paginated %}
+  <div class="card-footer" style="display:flex;justify-content:center;">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}"><span class="material-icons" style="font-size:18px;">chevron_left</span></a></li>{% endif %}
+      <li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}"><span class="material-icons" style="font-size:18px;">chevron_right</span></a></li>{% endif %}
+    </ul>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

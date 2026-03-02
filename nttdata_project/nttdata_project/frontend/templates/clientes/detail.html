@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ cliente.nome }} — NTT Data{% endblock %}
+{% block nav_clientes %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">business</span>{{ cliente.nome }}</h1>
+    <div class="breadcrumb"><a href="{% url 'clientes-list' %}" style="color:var(--gray-500);text-decoration:none;">{% trans "Clientes" %}</a><span class="material-icons" style="font-size:14px;">chevron_right</span>{{ cliente.nome }}</div>
+  </div>
+  <div class="page-header-actions">
+    {% if user.role in 'diretor,gestor' %}
+    <a href="{% url 'clientes-update' cliente.pk %}" class="btn btn-outline"><span class="material-icons-outlined">edit</span>{% trans "Editar" %}</a>
+    {% endif %}
+    <a href="{% url 'clientes-list' %}" class="btn btn-outline"><span class="material-icons-outlined">arrow_back</span>{% trans "Voltar" %}</a>
+  </div>
+</div>
+<div class="card" style="margin-bottom:1rem;">
+  <div class="card-header"><div class="card-header-left"><span class="material-icons-outlined">info</span>{% trans "Dados do Cliente" %}</div></div>
+  <div class="card-body">
+    <div class="detail-row">
+      <div class="detail-item"><dt>CNPJ</dt><dd>{{ cliente.cnpj }}</dd></div>
+      <div class="detail-item"><dt>{% trans "Nome" %}</dt><dd>{{ cliente.nome }}</dd></div>
+      <div class="detail-item"><dt>{% trans "Responsável NTT Data" %}</dt><dd>{{ cliente.resp_nttdata }}</dd></div>
+    </div>
+  </div>
+</div>
+{% if projetos %}
+<div class="card" style="margin-bottom:1rem;">
+  <div class="card-header"><div class="card-header-left"><span class="material-icons-outlined">work_outline</span>{% trans "Projetos Ativos" %}</div></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>{% trans "Projeto" %}</th><th>{% trans "OV" %}</th><th>{% trans "Alocação" %}</th><th>{% trans "Gestor" %}</th><th style="text-align:right;">{% trans "Ações" %}</th></tr></thead>
+      <tbody>
+        {% for p in projetos %}
+        <tr>
+          <td><a href="{% url 'projetos-detail' p.pk %}" style="color:var(--ntt-blue);text-decoration:none;font-weight:500;">{{ p.nome_proj_ntt }}</a></td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ p.ov|default:"—" }}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <div class="progress" style="width:80px;"><div class="progress-bar" style="width:{{ p.percentual_alocacao }}%;"></div></div>
+              <span style="font-size:.75rem;color:var(--gray-500);">{{ p.percentual_alocacao }}%</span>
+            </div>
+          </td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ p.gestor.nome|default:"—" }}</td>
+          <td><div class="td-actions"><a href="{% url 'projetos-detail' p.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined">visibility</span></a></div></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% if contratos %}
+<div class="card">
+  <div class="card-header"><div class="card-header-left"><span class="material-icons-outlined">description</span>{% trans "Contratos" %}</div></div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>{% trans "Código" %}</th><th>{% trans "Início" %}</th><th>{% trans "Término" %}</th><th>{% trans "FTE" %}</th><th>{% trans "Status" %}</th></tr></thead>
+      <tbody>
+        {% for ct in contratos %}
+        <tr>
+          <td><a href="{% url 'contratos-detail' ct.pk %}" style="color:var(--ntt-blue);text-decoration:none;font-weight:500;">{{ ct.codigo }}</a></td>
+          <td style="font-size:.8rem;">{{ ct.dt_inicio|date:"d/m/Y" }}</td>
+          <td style="font-size:.8rem;">{{ ct.dt_fim|date:"d/m/Y" }}</td>
+          <td style="font-size:.8rem;">{{ ct.fte }}</td>
+          <td>{% if ct.ativo %}<span class="badge badge-success">{% trans "Vigente" %}</span>{% else %}<span class="badge badge-danger">{% trans "Encerrado" %}</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

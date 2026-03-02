@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Gestão de Usuários" %} — NTT Data{% endblock %}
+{% block nav_usuarios %}active{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">manage_accounts</span>{% trans "Gestão de Usuários" %}</h1>
+    <div class="breadcrumb">
+      <span class="material-icons-outlined" style="font-size:14px;">home</span> NTT Data
+      <span class="material-icons-outlined" style="font-size:12px;">chevron_right</span>
+      {% trans "Usuários" %}
+    </div>
+  </div>
+  <div class="page-header-actions">
+    <a href="{% url 'usuarios-create' %}" class="btn btn-primary">
+      <span class="material-icons-outlined">person_add</span>{% trans "Novo Usuário" %}
+    </a>
+  </div>
+</div>
+
+{% if messages %}
+{% for msg in messages %}
+<div class="alert alert-{{ msg.tags }}" style="margin-bottom:1rem;padding:.75rem 1rem;border-radius:var(--radius);
+  {% if 'error' in msg.tags %}background:#fef2f2;border-left:3px solid var(--danger);color:#991b1b;
+  {% else %}background:#f0fdf4;border-left:3px solid var(--success);color:#166534;{% endif %}
+  display:flex;align-items:center;gap:.5rem;">
+  <span class="material-icons-outlined" style="font-size:18px;">{% if 'error' in msg.tags %}error{% else %}check_circle{% endif %}</span>
+  {{ msg }}
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="filter-bar">
+  <form method="get" style="display:contents;">
+    <div class="filter-group" style="flex:1;">
+      <label>{% trans "Busca" %}</label>
+      <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="{% trans "Nome, e-mail, usuário, matrícula..." %}">
+    </div>
+    <div class="filter-group">
+      <label>{% trans "Perfil" %}</label>
+      <select name="role" class="form-select">
+        <option value="">{% trans "Todos" %}</option>
+        {% for val, label in roles %}
+        <option value="{{ val }}" {% if role == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>{% trans "Status" %}</label>
+      <select name="status" class="form-select">
+        <option value="">{% trans "Todos" %}</option>
+        <option value="ativo"    {% if status == "ativo" %}selected{% endif %}>{% trans "Ativo" %}</option>
+        <option value="inativo"  {% if status == "inativo" %}selected{% endif %}>{% trans "Inativo" %}</option>
+        <option value="afastado" {% if status == "afastado" %}selected{% endif %}>{% trans "Afastado" %}</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">
+      <span class="material-icons-outlined">search</span>{% trans "Filtrar" %}
+    </button>
+    <a href="{% url 'usuarios-list' %}" class="btn btn-outline">
+      <span class="material-icons-outlined">clear</span>{% trans "Limpar" %}
+    </a>
+  </form>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-header-left">
+      <span class="material-icons-outlined">people_alt</span>{% trans "Usuários do Sistema" %}
+    </div>
+    <span class="badge badge-info">{{ total }} {% trans "usuário(s)" %}</span>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Usuário" %}</th>
+          <th>{% trans "Login" %}</th>
+          <th>{% trans "Perfil" %}</th>
+          <th>{% trans "Status" %}</th>
+          <th>{% trans "Cargo" %}</th>
+          <th>{% trans "Admissão" %}</th>
+          <th>{% trans "Acesso" %}</th>
+          <th style="text-align:right;">{% trans "Ações" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in usuarios %}
+        <tr {% if not u.is_active %}style="opacity:.6;"{% endif %}>
+          <td>
+            <div class="user-row">
+              <div class="avatar avatar-sm avatar-blue">{{ u.nome|first|upper }}</div>
+              <div class="user-row-info">
+                <span class="user-row-name">{{ u.nome }}</span>
+                <span class="user-row-sub">{{ u.email }}</span>
+              </div>
+            </div>
+          </td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ u.username }}</td>
+          <td><span class="badge badge-role-{{ u.role }}">{{ u.get_role_display }}</span></td>
+          <td>
+            {% if u.status == "ativo" %}
+            <span class="badge badge-success">{% trans "Ativo" %}</span>
+            {% elif u.status == "inativo" %}
+            <span class="badge badge-secondary">{% trans "Inativo" %}</span>
+            {% else %}
+            <span class="badge badge-warning">{% trans "Afastado" %}</span>
+            {% endif %}
+          </td>
+          <td style="font-size:.8rem;">{{ u.cargo|default:"—" }}</td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ u.dt_admissao|date:"d/m/Y"|default:"—" }}</td>
+          <td>
+            {% if u.is_active %}
+            <span style="font-size:.72rem;color:#16a34a;font-weight:600;display:flex;align-items:center;gap:.2rem;">
+              <span class="material-icons-outlined" style="font-size:14px;">lock_open</span>{% trans "Habilitado" %}
+            </span>
+            {% else %}
+            <span style="font-size:.72rem;color:var(--gray-400);font-weight:600;display:flex;align-items:center;gap:.2rem;">
+              <span class="material-icons-outlined" style="font-size:14px;">lock</span>{% trans "Bloqueado" %}
+            </span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="td-actions">
+              <a href="{% url 'usuarios-update' u.pk %}" class="btn btn-icon btn-outline btn-sm" title="{% trans "Editar" %}">
+                <span class="material-icons-outlined">edit</span>
+              </a>
+              <a href="{% url 'usuarios-reset-password' u.pk %}" class="btn btn-icon btn-outline btn-sm" title="{% trans "Redefinir senha" %}">
+                <span class="material-icons-outlined">lock_reset</span>
+              </a>
+              {% if u.pk != request.user.pk %}
+              <a href="{% url 'usuarios-delete' u.pk %}" class="btn btn-icon btn-outline btn-sm" title="{% trans "Excluir" %}">
+                <span class="material-icons-outlined" style="color:var(--danger);">delete</span>
+              </a>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">
+            <div class="empty-state">
+              <span class="material-icons-outlined">people</span>
+              <h3>{% trans "Nenhum usuário encontrado" %}</h3>
+              <p>{% trans "Tente ajustar os filtros de busca." %}</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

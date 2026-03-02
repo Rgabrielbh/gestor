@@ -1,0 +1,570 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Timeline — Colaboradores — NTT Data{% endblock %}
+{% block nav_timeline %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Timeline ──────────────────────────────────────────── */
+.tl-wrap { position:relative; padding-left:2.5rem; }
+.tl-wrap::before {
+  content:''; position:absolute; left:.85rem; top:0; bottom:0;
+  width:2px; background:var(--gray-200); border-radius:2px;
+}
+.tl-item  { position:relative; margin-bottom:1rem; }
+.tl-dot {
+  position:absolute; left:-1.75rem; top:.35rem;
+  width:14px; height:14px; border-radius:50%;
+  border:2.5px solid #fff; z-index:1;
+  background:var(--gray-300); box-shadow:0 0 0 2px var(--gray-200);
+}
+.tl-dot.ativo    { background:#16a34a; box-shadow:0 0 0 3px rgba(22,163,74,.18); }
+.tl-dot.encerrado{ background:var(--gray-300); }
+.tl-card {
+  background:#fff; border:1px solid var(--gray-200);
+  border-radius:var(--radius); padding:.875rem 1rem;
+  transition:box-shadow .12s;
+}
+.tl-card:hover { box-shadow:var(--shadow); }
+.tl-card.ativo    { border-left:3px solid #16a34a; }
+.tl-card.encerrado{ border-left:3px solid var(--gray-200); }
+.tl-periodo {
+  display:flex; align-items:center; gap:.3rem;
+  font-size:.72rem; color:var(--gray-400); margin-top:.3rem;
+}
+.tl-duracao {
+  display:inline-flex; align-items:center; gap:.25rem;
+  font-size:.72rem; font-weight:600;
+  background:var(--ntt-blue-light); color:var(--ntt-blue);
+  padding:.15rem .5rem; border-radius:3px; margin-top:.35rem;
+}
+
+/* ── Modo tabs ─────────────────────────────────────────── */
+.modo-tab {
+  display:inline-flex; align-items:center; gap:.35rem;
+  padding:.4rem .875rem; border-radius:var(--radius-sm);
+  font-size:.8125rem; font-weight:500; cursor:pointer;
+  border:1.5px solid var(--gray-200); background:#fff;
+  color:var(--gray-600); text-decoration:none; transition:all .12s;
+}
+.modo-tab.active, .modo-tab:hover {
+  border-color:var(--ntt-blue); color:var(--ntt-blue);
+  background:var(--ntt-blue-light); text-decoration:none;
+}
+
+/* ── Card lateral do colaborador ──────────────────────── */
+.colab-card { background:#fff; border:1px solid var(--gray-200); border-radius:var(--radius); overflow:hidden; }
+.colab-card-header {
+  background:linear-gradient(135deg, #0A1628 0%, #0057A8 100%);
+  padding:1.5rem 1rem 1.25rem;
+  text-align:center;
+}
+.colab-card-body { padding:1rem; }
+.colab-meta-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:.45rem 0; border-bottom:1px solid var(--gray-100);
+  font-size:.8rem;
+}
+.colab-meta-row:last-child { border-bottom:none; }
+.colab-meta-label { color:var(--gray-400); }
+.colab-meta-value { font-weight:600; color:var(--gray-800); }
+
+/* ── Painel de alocação atual ─────────────────────────── */
+.alocacao-atual-card {
+  border:1px solid var(--gray-200); border-radius:var(--radius);
+  overflow:hidden; margin-top:.75rem;
+}
+.alocacao-atual-header {
+  background:var(--ntt-blue); color:#fff;
+  padding:.5rem .875rem;
+  font-size:.7rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.6px;
+  display:flex; align-items:center; gap:.3rem;
+}
+.alocacao-item {
+  padding:.75rem .875rem;
+  border-bottom:1px solid var(--gray-100);
+}
+.alocacao-item:last-child { border-bottom:none; }
+.alocacao-item-header {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  margin-bottom:.5rem;
+}
+.alocacao-proj-name { font-size:.825rem; font-weight:700; color:var(--gray-900); }
+.alocacao-cliente   { font-size:.72rem; color:var(--gray-500); margin-top:.1rem; }
+.alocacao-funcao    { font-size:.72rem; color:var(--ntt-blue); font-weight:500; margin-top:.15rem; }
+.horas-badge {
+  display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0;
+}
+.horas-num { font-size:1rem; font-weight:800; color:var(--ntt-blue); line-height:1; }
+.horas-dia-label { font-size:.65rem; color:var(--gray-400); }
+
+/* Barra de percentual */
+.pct-bar-wrap { margin-top:.4rem; }
+.pct-bar-track {
+  display:block; width:100%;
+  height:8px; background:var(--gray-100); border-radius:4px; overflow:hidden; margin-bottom:.3rem;
+  position:relative;
+}
+.pct-bar-fill {
+  display:block; height:100%; border-radius:4px;
+  transition:width .6s ease; min-width:2px;
+}
+.pct-labels {
+  display:flex; justify-content:space-between; font-size:.68rem;
+}
+.pct-label-pct  { font-weight:700; color:var(--ntt-blue); }
+.pct-label-tipo { color:var(--gray-400); }
+
+/* Barra total multi-segmentos */
+.multi-bar-wrap { margin:0 .875rem .875rem; }
+.multi-bar-label {
+  font-size:.68rem; font-weight:700; color:var(--gray-500);
+  text-transform:uppercase; letter-spacing:.4px;
+  margin-bottom:.3rem;
+}
+.multi-bar-track {
+  height:12px; border-radius:6px; overflow:hidden;
+  display:flex; width:100%; background:var(--gray-100);
+}
+.multi-bar-seg {
+  display:block; height:100%; transition:width .6s ease; flex-shrink:0;
+}
+.multi-bar-legend { display:flex; flex-wrap:wrap; gap:.4rem .75rem; margin-top:.4rem; }
+.multi-bar-legend-item {
+  display:flex; align-items:center; gap:.3rem; font-size:.7rem; color:var(--gray-600);
+}
+.legend-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.disponivel-info {
+  margin:.75rem .875rem 0;
+  padding:.45rem .625rem;
+  border-radius:4px; font-size:.75rem; font-weight:600;
+  display:flex; align-items:center; gap:.3rem;
+}
+.disponivel-info.cheio   { background:#dcfce7; color:#166534; }
+.disponivel-info.parcial { background:#eff6ff; color:#1e40af; }
+.disponivel-info.vazio   { background:var(--gray-100); color:var(--gray-500); }
+
+/* Palette de cores para os projetos */
+.seg-0 { background:#0057A8; }
+.seg-1 { background:#1A7BC4; }
+.seg-2 { background:#2596E1; }
+.seg-3 { background:#7C3AED; }
+.seg-4 { background:#0284c7; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">assignment_ind</span>{% trans "Timeline — Colaboradores" %}</h1>
+    <div class="breadcrumb">
+      <a href="{% url 'timeline:index' %}">Timeline</a>
+      <span class="material-icons-outlined" style="font-size:12px;">chevron_right</span>
+      {% trans "Colaboradores" %}
+    </div>
+  </div>
+  <div class="page-header-actions">
+    <a href="{% url 'timeline:index' %}" class="btn btn-outline">
+      <span class="material-icons-outlined">arrow_back</span>{% trans "Voltar à Timeline" %}
+    </a>
+    <a href="{% url 'timeline:notebook' %}" class="btn btn-outline">
+      <span class="material-icons-outlined">laptop_mac</span>{% trans "Timeline Notebooks" %}
+    </a>
+  </div>
+</div>
+
+<div style="display:flex;gap:.5rem;margin-bottom:1rem;">
+  <a href="?modo=colaborador{% if q %}&q={{ q }}{% endif %}"
+     class="modo-tab {% if modo == 'colaborador' %}active{% endif %}">
+    <span class="material-icons-outlined" style="font-size:16px;">person</span>{% trans "Por Colaborador" %}
+  </a>
+  <a href="?modo=projeto{% if q %}&q={{ q }}{% endif %}"
+     class="modo-tab {% if modo == 'projeto' %}active{% endif %}">
+    <span class="material-icons-outlined" style="font-size:16px;">work_outline</span>{% trans "Por Projeto" %}
+  </a>
+</div>
+
+<div class="filter-bar" style="margin-bottom:1.25rem;">
+  <form method="get" style="display:contents;">
+    <input type="hidden" name="modo" value="{{ modo }}">
+    <div class="filter-group" style="flex:1;">
+      <label>{% if modo == 'colaborador' %}{% trans "Nome ou matrícula do colaborador" %}{% else %}{% trans "Nome do projeto ou cliente" %}{% endif %}</label>
+      <input type="text" name="q" value="{{ q }}" class="form-control"
+             placeholder="{% if modo == 'colaborador' %}Ex: Lucas, MAT0001{% else %}Ex: Itaú, Open Banking{% endif %}">
+    </div>
+    <button type="submit" class="btn btn-primary">
+      <span class="material-icons-outlined">search</span>{% trans "Buscar" %}
+    </button>
+    {% if q %}
+    <a href="?modo={{ modo }}" class="btn btn-outline">
+      <span class="material-icons-outlined">clear</span>{% trans "Limpar" %}
+    </a>
+    {% endif %}
+  </form>
+</div>
+
+{% if sugestoes %}
+<div class="card" style="margin-bottom:1rem;">
+  <div class="card-header">
+    <div class="card-header-left">
+      <span class="material-icons-outlined">{% if modo == 'colaborador' %}people_alt{% else %}work_outline{% endif %}</span>
+      {% if modo == 'colaborador' %}{% trans "Colaboradores encontrados" %}{% else %}{% trans "Projetos encontrados — clique para ver a timeline" %}{% endif %}
+    </div>
+    <span class="badge badge-info">{{ sugestoes|length }} {% trans "resultado(s)" %}</span>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <tbody>
+        {% for s in sugestoes %}
+        <tr>
+          {% if modo == 'colaborador' %}
+          <td>
+            <div class="user-row">
+              <div class="avatar avatar-sm avatar-blue">{{ s.nome|first|upper }}</div>
+              <div class="user-row-info">
+                <span class="user-row-name">{{ s.nome }}</span>
+                <span class="user-row-sub">{{ s.get_role_display }}</span>
+              </div>
+            </div>
+          </td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ s.matricula|default:"—" }}</td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ s.cargo }}</td>
+          <td>
+            <a href="?modo=colaborador&q={{ s.nome }}" class="btn btn-outline btn-sm">
+              <span class="material-icons-outlined">timeline</span>{% trans "Ver timeline" %}
+            </a>
+          </td>
+          {% else %}
+          <td style="font-weight:600;">{{ s.nome_proj_ntt }}</td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ s.id_cliente.nome }}</td>
+          <td>
+            <a href="?modo=projeto&q={{ s.nome_proj_ntt }}" class="btn btn-outline btn-sm">
+              <span class="material-icons-outlined">timeline</span>{% trans "Ver timeline" %}
+            </a>
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if resultado and modo == 'colaborador' %}
+<div style="display:grid;grid-template-columns:300px 1fr;gap:1.25rem;align-items:start;">
+
+  
+  <div class="colab-card">
+
+    
+    <div class="colab-card-header">
+      <div class="avatar avatar-xl" style="margin:0 auto .75rem;background:rgba(255,255,255,.2);color:#fff;font-size:1.5rem;border:2.5px solid rgba(255,255,255,.4);">
+        {{ resultado.nome|first|upper }}
+      </div>
+      <div style="font-size:1rem;font-weight:700;color:#fff;">{{ resultado.nome }}</div>
+      <div style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.2rem 0 .6rem;">{{ resultado.cargo }}</div>
+      <span class="badge" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);">
+        {{ resultado.get_role_display }}
+      </span>
+    </div>
+
+    
+    <div class="colab-card-body">
+      {% if resultado.matricula %}
+      <div class="colab-meta-row">
+        <span class="colab-meta-label">Matrícula</span>
+        <span class="colab-meta-value">{{ resultado.matricula }}</span>
+      </div>
+      {% endif %}
+      {% if resultado.cidade %}
+      <div class="colab-meta-row">
+        <span class="colab-meta-label">Cidade/UF</span>
+        <span class="colab-meta-value">{{ resultado.cidade }}/{{ resultado.estado }}</span>
+      </div>
+      {% endif %}
+      {% if resultado.dt_admissao %}
+      <div class="colab-meta-row">
+        <span class="colab-meta-label">Admissão</span>
+        <span class="colab-meta-value">{{ resultado.dt_admissao|date:"d/m/Y" }}</span>
+      </div>
+      {% endif %}
+      <div class="colab-meta-row">
+        <span class="colab-meta-label">Projetos</span>
+        <span class="colab-meta-value">{{ total_projetos }}</span>
+      </div>
+    </div>
+
+    
+    {% if alocacoes_parciais %}
+    <div class="alocacao-atual-card">
+      <div class="alocacao-atual-header">
+        <span class="material-icons-outlined" style="font-size:14px;">schedule</span>
+        {% trans "Distribuição do Dia de Trabalho" %}
+      </div>
+
+      
+      <div class="multi-bar-wrap" style="padding:.875rem .875rem .5rem;">
+        <div class="multi-bar-label">Jornada diária (8h = 100%)</div>
+        <div class="multi-bar-track">
+          {% for ap in alocacoes_parciais %}
+          <div class="multi-bar-seg seg-{{ forloop.counter0 }}"
+               style="width:{{ ap.percentual_dia|stringformat:'.1f' }}%;"
+               title="{{ ap.id_alocacao.id_proj.nome_proj_ntt }} — {{ ap.horas_dia }}h ({{ ap.percentual_dia }}%)">
+          </div>
+          {% endfor %}
+          
+          {% if horas_total < 8 %}
+          <div class="multi-bar-seg" style="flex:1;background:var(--gray-100);"></div>
+          {% endif %}
+        </div>
+        <div class="multi-bar-legend">
+          {% for ap in alocacoes_parciais %}
+          <div class="multi-bar-legend-item">
+            <div class="legend-dot seg-{{ forloop.counter0 }}"></div>
+            <span>{{ ap.id_alocacao.id_proj.nome_proj_ntt|truncatechars:18 }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      
+      {% for ap in alocacoes_parciais %}
+      <div class="alocacao-item">
+        <div class="alocacao-item-header">
+          <div style="flex:1;min-width:0;">
+            <div class="alocacao-proj-name">{{ ap.id_alocacao.id_proj.nome_proj_ntt }}</div>
+            <div class="alocacao-cliente">{{ ap.id_alocacao.id_cliente.nome }}</div>
+            <div class="alocacao-funcao">{{ ap.id_alocacao.funcao }}</div>
+          </div>
+          <div class="horas-badge">
+            <span class="horas-num">{{ ap.horas_dia }}h</span>
+            <span class="horas-dia-label">por dia</span>
+          </div>
+        </div>
+
+        
+        <div style="margin-top:.5rem;">
+          <div style="display:block;width:100%;height:8px;background:var(--gray-100);border-radius:4px;overflow:hidden;margin-bottom:.3rem;">
+            <div style="display:block;width:{{ ap.percentual_dia|stringformat:'.1f' }}%;height:100%;border-radius:4px;transition:width .6s ease;" class="seg-{{ forloop.counter0 }}"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.68rem;">
+            <span style="font-weight:700;color:var(--ntt-blue);">{{ ap.percentual_dia }}% da jornada ({{ ap.horas_dia }}h)</span>
+            <span style="color:var(--gray-400);">{{ ap.turno_descricao }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+      
+      {% if horas_total >= 8 %}
+      <div class="disponivel-info cheio">
+        <span class="material-icons-outlined" style="font-size:15px;">check_circle</span>
+        Jornada completa — {{ horas_total }}h/8h alocadas
+      </div>
+      {% else %}
+      <div class="disponivel-info parcial">
+        <span class="material-icons-outlined" style="font-size:15px;">timelapse</span>
+        {{ horas_total }}h alocadas — {{ 8|add:horas_total|floatformat:1 }}h disponíveis
+      </div>
+      {% endif %}
+      <div style="height:.75rem;"></div>
+
+    </div>
+
+    {% elif projeto_atual %}
+    
+    <div style="margin:.875rem;padding:.875rem;background:var(--ntt-blue-light);border-radius:var(--radius);border-left:3px solid var(--ntt-blue);">
+      <div style="font-size:.68rem;font-weight:700;color:var(--ntt-blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem;">
+        {% trans "Projeto Atual" %}
+      </div>
+      <div style="font-size:.875rem;font-weight:700;color:var(--gray-900);">{{ projeto_atual.id_proj.nome_proj_ntt }}</div>
+      <div style="font-size:.78rem;color:var(--gray-500);margin:.15rem 0;">{{ projeto_atual.id_cliente.nome }}</div>
+      <div style="font-size:.75rem;color:var(--ntt-blue);font-weight:500;">{{ projeto_atual.funcao }}</div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <span class="material-icons-outlined">timeline</span>{% trans "Histórico de Alocações" %}
+      </div>
+      <span class="badge badge-info">{{ total_projetos }} {% trans "projeto(s)" %}</span>
+    </div>
+    <div class="card-body">
+      {% if alocacoes %}
+      <div class="tl-wrap">
+        {% for aloc in alocacoes %}
+        <div class="tl-item">
+          <div class="tl-dot {% if aloc.ativo %}ativo{% else %}encerrado{% endif %}"></div>
+          <div class="tl-card {% if aloc.ativo %}ativo{% else %}encerrado{% endif %}">
+
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;flex-wrap:wrap;">
+              <div>
+                <div style="font-size:.875rem;font-weight:700;color:var(--gray-900);">{{ aloc.id_proj.nome_proj_ntt }}</div>
+                <div style="font-size:.78rem;color:var(--gray-500);margin:.1rem 0;">{{ aloc.id_cliente.nome }}</div>
+                {% if aloc.funcao %}
+                <div style="font-size:.75rem;color:var(--ntt-blue);font-weight:500;">{{ aloc.funcao }}</div>
+                {% endif %}
+                {% if aloc.squad %}
+                <div style="font-size:.72rem;color:var(--gray-400);">Squad: {{ aloc.squad }}</div>
+                {% endif %}
+              </div>
+              <div style="flex-shrink:0;">
+                {% if aloc.ativo %}
+                <span class="badge badge-success">{% trans "Atual" %}</span>
+                {% else %}
+                <span class="badge badge-secondary">{% trans "Encerrado" %}</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="tl-periodo">
+              <span class="material-icons-outlined" style="font-size:12px;">date_range</span>
+              {{ aloc.dt_inicio|date:"d/m/Y" }}
+              {% if aloc.dt_fim %} → {{ aloc.dt_fim|date:"d/m/Y" }}{% else %} → <strong>{% trans "presente" %}</strong>{% endif %}
+            </div>
+            <div class="tl-duracao">
+              <span class="material-icons-outlined" style="font-size:12px;">schedule</span>
+              {{ aloc.duracao }}
+            </div>
+
+            
+            {% if aloc.ativo %}
+            {% for ap in alocacoes_parciais %}
+            {% if ap.id_alocacao.id == aloc.id %}
+            <div style="margin-top:.5rem;padding:.45rem .625rem;background:#f0f9ff;border-radius:4px;display:flex;align-items:center;gap:.5rem;">
+              <div style="flex:1;height:5px;background:var(--gray-200);border-radius:3px;overflow:hidden;">
+                <div style="width:{{ ap.percentual_dia|stringformat:'.1f' }}%;height:100%;background:var(--ntt-blue);border-radius:3px;"></div>
+              </div>
+              <span style="font-size:.7rem;font-weight:700;color:var(--ntt-blue);white-space:nowrap;">{{ ap.horas_dia }}h/dia ({{ ap.percentual_dia }}%)</span>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <span class="material-icons-outlined">assignment_ind</span>
+        <h3>{% trans "Nenhuma alocação registrada." %}</h3>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endif %}
+
+{% if resultado and modo == 'projeto' %}
+<div style="display:grid;grid-template-columns:280px 1fr;gap:1.25rem;align-items:start;">
+
+  
+  <div class="colab-card">
+    <div class="colab-card-header">
+      <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;border:2px solid rgba(255,255,255,.3);">
+        <span class="material-icons-outlined" style="color:#fff;font-size:24px;">work_outline</span>
+      </div>
+      <div style="font-size:1rem;font-weight:700;color:#fff;">{{ resultado.nome_proj_ntt }}</div>
+      <div style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.2rem 0 .6rem;">{{ resultado.id_cliente.nome }}</div>
+      <span class="badge" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);">
+        {% if resultado.ativo %}{% trans "Ativo" %}{% else %}{% trans "Encerrado" %}{% endif %}
+      </span>
+    </div>
+    <div class="colab-card-body">
+      <div class="colab-meta-row">
+        <span class="colab-meta-label">{% trans "Total colaboradores" %}</span>
+        <span class="colab-meta-value">{{ total_colaboradores }}</span>
+      </div>
+      <div class="colab-meta-row">
+        <span class="colab-meta-label">{% trans "Alocações ativas" %}</span>
+        <span class="colab-meta-value" style="color:#16a34a;">{{ alocacoes_ativas }}</span>
+      </div>
+      {% if resultado.ov %}
+      <div class="colab-meta-row">
+        <span class="colab-meta-label">OV</span>
+        <span class="colab-meta-value">{{ resultado.ov }}</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <span class="material-icons-outlined">people_alt</span>{% trans "Colaboradores no Projeto" %}
+      </div>
+      <span class="badge badge-info">{{ total_colaboradores }} {% trans "pessoa(s)" %}</span>
+    </div>
+    <div class="card-body">
+      {% if alocacoes %}
+      <div class="tl-wrap">
+        {% for aloc in alocacoes %}
+        <div class="tl-item">
+          <div class="tl-dot {% if aloc.ativo %}ativo{% else %}encerrado{% endif %}"></div>
+          <div class="tl-card {% if aloc.ativo %}ativo{% else %}encerrado{% endif %}">
+
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:.6rem;">
+                <div class="avatar avatar-sm avatar-blue">{{ aloc.id_colaborador.nome|first|upper }}</div>
+                <div>
+                  <div style="font-size:.875rem;font-weight:700;color:var(--gray-900);">{{ aloc.id_colaborador.nome }}</div>
+                  {% if aloc.funcao %}
+                  <div style="font-size:.75rem;color:var(--ntt-blue);font-weight:500;">{{ aloc.funcao }}</div>
+                  {% endif %}
+                  {% if aloc.squad %}
+                  <div style="font-size:.72rem;color:var(--gray-400);">Squad: {{ aloc.squad }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              {% if aloc.ativo %}
+              <span class="badge badge-success">{% trans "Ativo" %}</span>
+              {% else %}
+              <span class="badge badge-secondary">{% trans "Encerrado" %}</span>
+              {% endif %}
+            </div>
+
+            <div class="tl-periodo">
+              <span class="material-icons-outlined" style="font-size:12px;">date_range</span>
+              {{ aloc.dt_inicio|date:"d/m/Y" }}
+              {% if aloc.dt_fim %} → {{ aloc.dt_fim|date:"d/m/Y" }}{% else %} → <strong>{% trans "presente" %}</strong>{% endif %}
+            </div>
+            <div class="tl-duracao">
+              <span class="material-icons-outlined" style="font-size:12px;">schedule</span>
+              {{ aloc.duracao }}
+            </div>
+
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <span class="material-icons-outlined">people_alt</span>
+        <h3>{% trans "Nenhum colaborador neste projeto." %}</h3>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endif %}
+
+{% if q and not resultado and not sugestoes %}
+<div class="empty-state" style="padding:3rem;">
+  <span class="material-icons-outlined">search_off</span>
+  <h3>{% trans "Nenhum resultado para" %} "{{ q }}"</h3>
+  <p>{% trans "Tente um termo diferente." %}</p>
+</div>
+{% endif %}
+
+{% endblock %}

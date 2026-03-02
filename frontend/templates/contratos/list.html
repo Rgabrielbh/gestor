@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Contratos" %} — NTT Data{% endblock %}
+{% block nav_contratos %}active{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">description</span>{% trans "Contratos" %}</h1>
+  </div>
+  <div class="page-header-actions">
+    {% if user.role in 'diretor,gestor' %}
+    <a href="{% url 'contratos-create' %}" class="btn btn-primary"><span class="material-icons-outlined">add</span>{% trans "Novo Contrato" %}</a>
+    {% endif %}
+  </div>
+</div>
+<div class="filter-bar">
+  <form method="get" style="display:contents;">
+    <div class="filter-group" style="flex:1;">
+      <label>{% trans "Busca" %}</label>
+      <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Código, cliente...">
+    </div>
+    <div class="filter-group">
+      <label>{% trans "Status" %}</label>
+      <select name="ativo" class="form-select">
+        <option value="">{% trans "Todos" %}</option>
+        <option value="1" {% if request.GET.ativo == '1' %}selected{% endif %}>{% trans "Vigentes" %}</option>
+        <option value="0" {% if request.GET.ativo == '0' %}selected{% endif %}>{% trans "Encerrados" %}</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary"><span class="material-icons-outlined">search</span>{% trans "Filtrar" %}</button>
+    <a href="{% url 'contratos-list' %}" class="btn btn-outline"><span class="material-icons-outlined">clear</span>{% trans "Limpar" %}</a>
+  </form>
+</div>
+<div class="card">
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>{% trans "Código" %}</th><th>{% trans "Cliente" %}</th><th>FTE</th><th>{% trans "Início" %}</th><th>{% trans "Término" %}</th><th>{% trans "Status" %}</th><th style="text-align:right;">{% trans "Ações" %}</th></tr></thead>
+      <tbody>
+        {% for obj in contratos %}
+        <tr>
+          <td><a href="{% url 'contratos-detail' obj.pk %}" style="color:var(--ntt-blue);text-decoration:none;font-weight:500;">{{ obj.codigo }}</a></td>
+          <td style="font-size:.85rem;">{{ obj.cliente.nome|default:"—" }}</td>
+          <td style="font-size:.85rem;">{{ obj.fte }}</td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ obj.dt_inicio|date:"d/m/Y" }}</td>
+          <td style="font-size:.8rem;color:var(--gray-500);">{{ obj.dt_fim|date:"d/m/Y" }}</td>
+          <td>{% if obj.ativo %}<span class="badge badge-success">{% trans "Vigente" %}</span>{% else %}<span class="badge badge-danger">{% trans "Encerrado" %}</span>{% endif %}</td>
+          <td><div class="td-actions">
+            <a href="{% url 'contratos-detail' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined">visibility</span></a>
+            {% if user.role in 'diretor,gestor' %}
+            <a href="{% url 'contratos-update' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined">edit</span></a>
+            <a href="{% url 'contratos-delete' obj.pk %}" class="btn btn-icon btn-outline btn-sm"><span class="material-icons-outlined" style="color:var(--danger);">delete</span></a>
+            {% endif %}
+          </div></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7"><div class="empty-state"><span class="material-icons-outlined">description</span><h3>{% trans "Nenhum contrato encontrado." %}</h3></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% load i18n %}
+<div class="card">
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          {% for col in columns %}
+          <th>{{ col }}</th>
+          {% endfor %}
+          <th style="text-align:right;">{% trans "Ações" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% block table_body %}{% endblock %}
+      </tbody>
+    </table>
+  </div>
+  {% if is_paginated %}
+  <div class="card-footer" style="display:flex;justify-content:center;">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ request.GET.urlencode }}"><span class="material-icons" style="font-size:18px;">chevron_left</span></a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link"><span class="material-icons" style="font-size:18px;">chevron_left</span></span></li>
+      {% endif %}
+      <li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ request.GET.urlencode }}"><span class="material-icons" style="font-size:18px;">chevron_right</span></a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link"><span class="material-icons" style="font-size:18px;">chevron_right</span></span></li>
+      {% endif %}
+    </ul>
+  </div>
+  {% endif %}
+</div>

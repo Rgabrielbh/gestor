@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Excluir Colaborador" %} — NTT Data{% endblock %}
+{% block content %}
+<div style="max-width:500px;margin:2rem auto;">
+  <div class="card">
+    <div class="card-body" style="text-align:center;padding:2.5rem;">
+      <span class="material-icons" style="font-size:48px;color:var(--danger);display:block;margin-bottom:1rem;">delete_forever</span>
+      <h3 style="font-weight:700;margin-bottom:.5rem;">{% trans "Confirmar exclusão" %}</h3>
+      <p style="color:var(--gray-500);margin-bottom:1.5rem;">
+        {% blocktrans with nome=colaborador.nome %}Tem certeza que deseja excluir o colaborador <strong>{{ nome }}</strong>? Esta ação não pode ser desfeita.{% endblocktrans %}
+      </p>
+      <div style="display:flex;gap:.5rem;justify-content:center;">
+        <a href="{% url "colaboradores-list" %}" class="btn btn-outline">{% trans "Cancelar" %}</a>
+        <form method="post">{% csrf_token %}<button type="submit" class="btn btn-danger"><span class="material-icons-outlined">delete</span>{% trans "Excluir" %}</button></form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

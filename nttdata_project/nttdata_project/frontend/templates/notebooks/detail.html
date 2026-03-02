@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ notebook.numero_serie }} — NTT Data{% endblock %}
+{% block nav_notebooks %}active{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">laptop_mac</span>{{ notebook.numero_serie }}</h1>
+    <div class="breadcrumb">
+      <a href="{% url 'notebooks-list' %}" style="color:var(--gray-500);text-decoration:none;">{% trans "Notebooks" %}</a>
+      <span class="material-icons" style="font-size:14px;">chevron_right</span>
+      {{ notebook.numero_serie }}
+    </div>
+  </div>
+  <div class="page-header-actions">
+    {% if user.role in "diretor,gestor" %}
+    <a href="{% url 'notebooks-update' notebook.pk %}" class="btn btn-outline">
+      <span class="material-icons-outlined">edit</span>{% trans "Editar" %}
+    </a>
+    {% endif %}
+    <a href="{% url 'notebooks-list' %}" class="btn btn-outline">
+      <span class="material-icons-outlined">arrow_back</span>{% trans "Voltar" %}
+    </a>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:300px 1fr;gap:1rem;align-items:start;">
+
+  <div class="card">
+    <div style="background:linear-gradient(135deg,#0A1628 0%,#0057A8 100%);padding:1.5rem 1.25rem;border-radius:var(--radius) var(--radius) 0 0;text-align:center;">
+      <div style="width:56px;height:56px;border-radius:14px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;margin:0 auto .875rem;">
+        <span class="material-icons-outlined" style="color:#fff;font-size:28px;">laptop_mac</span>
+      </div>
+      <div style="font-size:1rem;font-weight:700;color:#fff;">{{ notebook.numero_serie }}</div>
+      <div style="font-size:.85rem;color:rgba(255,255,255,.75);margin:.2rem 0 .75rem;">{{ notebook.marca }} {{ notebook.modelo }}</div>
+      {% if notebook.ativo %}
+      <span class="badge badge-success">{% trans "Ativo" %}</span>
+      {% else %}
+      <span class="badge badge-secondary">{% trans "Inativo" %}</span>
+      {% endif %}
+      <span class="badge badge-info" style="margin-left:.35rem;">{{ notebook.origem }}</span>
+    </div>
+    <div class="card-body" style="padding:1rem;">
+      {% if notebook.patrimonio_ntt %}
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;border-bottom:1px solid var(--gray-100);">
+        <span style="color:var(--gray-400);">{% trans "Patrimônio NTT" %}</span>
+        <span style="font-weight:600;">{{ notebook.patrimonio_ntt }}</span>
+      </div>
+      {% endif %}
+      {% if notebook.patrimonio_cliente %}
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;border-bottom:1px solid var(--gray-100);">
+        <span style="color:var(--gray-400);">{% trans "Patrimônio Cliente" %}</span>
+        <span style="font-weight:600;">{{ notebook.patrimonio_cliente }}</span>
+      </div>
+      {% endif %}
+      {% if notebook.localizacao %}
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;border-bottom:1px solid var(--gray-100);">
+        <span style="color:var(--gray-400);">{% trans "Localização" %}</span>
+        <span style="font-weight:600;">{{ notebook.localizacao }}</span>
+      </div>
+      {% endif %}
+      {% if notebook.responsavel %}
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;border-bottom:1px solid var(--gray-100);">
+        <span style="color:var(--gray-400);">{% trans "Responsável" %}</span>
+        <a href="{% url 'colaboradores-detail' notebook.responsavel.pk %}" style="font-weight:600;color:var(--ntt-blue);text-decoration:none;">{{ notebook.responsavel.nome }}</a>
+      </div>
+      {% endif %}
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;">
+        <span style="color:var(--gray-400);">{% trans "Origem" %}</span>
+        <span style="font-weight:600;">{{ notebook.origem }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:1rem;">
+
+    <div class="card">
+      <div class="card-header"><div class="card-header-left"><span class="material-icons-outlined">info</span>{% trans "Especificações" %}</div></div>
+      <div class="card-body">
+        <div class="detail-row">
+          <div class="detail-item"><dt>{% trans "Marca" %}</dt><dd>{{ notebook.marca|default:"—" }}</dd></div>
+          <div class="detail-item"><dt>{% trans "Modelo" %}</dt><dd>{{ notebook.modelo|default:"—" }}</dd></div>
+          <div class="detail-item"><dt>{% trans "Nº de Série" %}</dt><dd>{{ notebook.numero_serie }}</dd></div>
+        </div>
+        {% if notebook.observacoes %}
+        <div style="margin-top:.75rem;padding:.75rem;background:var(--gray-50);border-radius:var(--radius);font-size:.85rem;color:var(--gray-700);line-height:1.6;border-left:3px solid var(--ntt-blue);">
+          {{ notebook.observacoes }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if historico %}
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-left"><span class="material-icons-outlined">history</span>{% trans "Histórico de Responsáveis" %}</div>
+        <span class="badge badge-info">{{ historico|length }}</span>
+      </div>
+      <div style="padding:1rem;">
+        <div style="position:relative;padding-left:2rem;">
+          <div style="position:absolute;left:.65rem;top:0;bottom:0;width:2px;background:var(--gray-200);border-radius:2px;"></div>
+          {% for h in historico %}
+          <div style="position:relative;margin-bottom:1rem;">
+            <div style="position:absolute;left:-1.45rem;top:.3rem;width:12px;height:12px;border-radius:50%;border:2.5px solid #fff;
+              {% if h.ativo %}background:#16a34a;box-shadow:0 0 0 2px rgba(22,163,74,.2);
+              {% else %}background:var(--gray-300);box-shadow:0 0 0 2px var(--gray-200);{% endif %}
+              z-index:1;"></div>
+            <div style="background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:.75rem 1rem;
+              {% if h.ativo %}border-left:3px solid #16a34a;{% else %}border-left:3px solid var(--gray-200);{% endif %}">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
+                <div>
+                  {% if h.responsavel %}
+                  <div style="font-size:.875rem;font-weight:700;color:var(--gray-900);">{{ h.responsavel.nome }}</div>
+                  <div style="font-size:.75rem;color:var(--gray-500);margin:.1rem 0;">{{ h.responsavel.cargo }}</div>
+                  {% else %}
+                  <div style="font-size:.875rem;font-weight:700;color:var(--gray-500);">{% trans "Sem responsável" %}</div>
+                  {% endif %}
+                  {% if h.cliente %}<div style="font-size:.75rem;color:var(--ntt-blue);font-weight:500;">{{ h.cliente.nome }}</div>{% endif %}
+                  {% if h.localizacao %}<div style="font-size:.72rem;color:var(--gray-400);">{{ h.localizacao }}</div>{% endif %}
+                </div>
+                {% if h.ativo %}
+                <span class="badge badge-success">{% trans "Atual" %}</span>
+                {% else %}
+                <span class="badge badge-secondary">{% trans "Encerrado" %}</span>
+                {% endif %}
+              </div>
+              <div style="font-size:.72rem;color:var(--gray-400);margin-top:.35rem;display:flex;align-items:center;gap:.3rem;">
+                <span class="material-icons-outlined" style="font-size:12px;">date_range</span>
+                {{ h.dt_inicio|date:"d/m/Y" }}
+                {% if h.dt_fim %} → {{ h.dt_fim|date:"d/m/Y" }}{% else %} → <strong>{% trans "presente" %}</strong>{% endif %}
+              </div>
+              {% if h.duracao %}
+              <div style="display:inline-flex;align-items:center;gap:.25rem;font-size:.72rem;font-weight:600;background:var(--ntt-blue-light);color:var(--ntt-blue);padding:.15rem .5rem;border-radius:3px;margin-top:.3rem;">
+                <span class="material-icons-outlined" style="font-size:12px;">schedule</span>{{ h.duracao }}
+              </div>
+              {% endif %}
+              {% if h.observacao %}
+              <div style="margin-top:.4rem;font-size:.75rem;color:var(--gray-500);font-style:italic;">{{ h.observacao }}</div>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="card">
+      <div class="empty-state" style="padding:2rem;">
+        <span class="material-icons-outlined">history</span>
+        <h3>{% trans "Nenhum histórico registrado para este notebook." %}</h3>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

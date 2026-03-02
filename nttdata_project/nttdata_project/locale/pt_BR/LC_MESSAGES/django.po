@@ -1,0 +1,670 @@
+# NTT Data Gestão translations
+# Language: pt-br
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt-br\n"
+
+msgid "API Docs"
+msgstr "API Docs"
+
+msgid "Acessar sua conta"
+msgstr "Acessar sua conta"
+
+msgid "Adicionar"
+msgstr "Adicionar"
+
+msgid "Administração"
+msgstr "Administração"
+
+msgid "Admissão"
+msgstr "Admissão"
+
+msgid "Admissões do Mês"
+msgstr "Admissões do Mês"
+
+msgid "Afastado"
+msgstr "Afastado"
+
+msgid "Alocado"
+msgstr "Alocado"
+
+msgid "Alocar"
+msgstr "Alocar"
+
+msgid "Alocar Colaborador"
+msgstr "Alocar Colaborador"
+
+msgid "Alocações Ativas"
+msgstr "Alocações Ativas"
+
+msgid "Alocações ativas"
+msgstr "Alocações ativas"
+
+msgid "Alocações por Projeto"
+msgstr "Alocações por Projeto"
+
+msgid "Alterar Senha"
+msgstr "Alterar Senha"
+
+msgid "Alterar senha"
+msgstr "Alterar senha"
+
+msgid "Análises"
+msgstr "Análises"
+
+msgid "Atenção"
+msgstr "Atenção"
+
+msgid "Ativo"
+msgstr "Ativo"
+
+msgid "Atual"
+msgstr "Atual"
+
+msgid "Atualizar"
+msgstr "Atualizar"
+
+msgid "Ação"
+msgstr "Ação"
+
+msgid "Ações"
+msgstr "Ações"
+
+msgid "Bem-vindo de volta"
+msgstr "Bem-vindo de volta"
+
+msgid "Busca"
+msgstr "Busca"
+
+msgid "Buscar"
+msgstr "Buscar"
+
+msgid "Cadastrar"
+msgstr "Cadastrar"
+
+msgid "Cadastrar Colaborador"
+msgstr "Cadastrar Colaborador"
+
+msgid "Cancelar"
+msgstr "Cancelar"
+
+msgid "Cargo"
+msgstr "Cargo"
+
+msgid "Centro de Custo"
+msgstr "Centro de Custo"
+
+msgid "Cliente"
+msgstr "Cliente"
+
+msgid "Clientes"
+msgstr "Clientes"
+
+msgid "Colaborador"
+msgstr "Colaborador"
+
+msgid "Colaboradores"
+msgstr "Colaboradores"
+
+msgid "Colaboradores Alocados"
+msgstr "Colaboradores Alocados"
+
+msgid "Colaboradores Ativos"
+msgstr "Colaboradores Ativos"
+
+msgid "Colaboradores alocados em projetos com squad, função e centro de custo."
+msgstr "Colaboradores alocados em projetos com squad, função e centro de custo."
+
+msgid "Colaboradores encontrados"
+msgstr "Colaboradores encontrados"
+
+msgid "Colaboradores no Projeto"
+msgstr "Colaboradores no Projeto"
+
+msgid "Confirmar Exclusão"
+msgstr "Confirmar Exclusão"
+
+msgid "Confirmar exclusão"
+msgstr "Confirmar exclusão"
+
+msgid "Confirmar senha"
+msgstr "Confirmar senha"
+
+msgid "Contrato"
+msgstr "Contrato"
+
+msgid "Contrato pendente"
+msgstr "Contrato pendente"
+
+msgid "Contratos"
+msgstr "Contratos"
+
+msgid "Contratos Vencendo em 60 Dias"
+msgstr "Contratos Vencendo em 60 Dias"
+
+msgid "Contratos Vigentes"
+msgstr "Contratos Vigentes"
+
+msgid "Controle centralizado de equipes, alocações, contratos e ativos tecnológicos."
+msgstr "Controle centralizado de equipes, alocações, contratos e ativos tecnológicos."
+
+msgid "Dados Profissionais"
+msgstr "Dados Profissionais"
+
+msgid "Dados do Cliente"
+msgstr "Dados do Cliente"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Dedicação"
+msgstr "Dedicação"
+
+msgid "Dedicação integral"
+msgstr "Dedicação integral"
+
+msgid "Dedicação parcial"
+msgstr "Dedicação parcial"
+
+msgid "Demissão"
+msgstr "Demissão"
+
+msgid "Descrição"
+msgstr "Descrição"
+
+msgid "Desde:"
+msgstr "Desde:"
+
+msgid "Detalhes"
+msgstr "Detalhes"
+
+msgid "Diretor"
+msgstr "Diretor"
+
+msgid "Diretor > Gestor > Gerente > Operador"
+msgstr "Diretor > Gestor > Gerente > Operador"
+
+msgid "Distribuição do Dia de Trabalho"
+msgstr "Distribuição do Dia de Trabalho"
+
+msgid "E-mail"
+msgstr "E-mail"
+
+msgid "Editar"
+msgstr "Editar"
+
+msgid "Editar Cliente"
+msgstr "Editar Cliente"
+
+msgid "Editar Contrato"
+msgstr "Editar Contrato"
+
+msgid "Editar Informações"
+msgstr "Editar Informações"
+
+msgid "Editar Notebook"
+msgstr "Editar Notebook"
+
+msgid "Editar Projeto"
+msgstr "Editar Projeto"
+
+msgid "Encerrado"
+msgstr "Encerrado"
+
+msgid "English"
+msgstr "English"
+
+msgid "Entrar"
+msgstr "Entrar"
+
+msgid "Español"
+msgstr "Español"
+
+msgid "Especificações"
+msgstr "Especificações"
+
+msgid "Esta ação não pode ser desfeita."
+msgstr "Esta ação não pode ser desfeita."
+
+msgid "Excluir"
+msgstr "Excluir"
+
+msgid "Exportar CSV"
+msgstr "Exportar CSV"
+
+msgid "Exportar PDF"
+msgstr "Exportar PDF"
+
+msgid "FTE"
+msgstr "FTE"
+
+msgid "Filtrar"
+msgstr "Filtrar"
+
+msgid "Função"
+msgstr "Função"
+
+msgid "Gerado em"
+msgstr "Gerado em"
+
+msgid "Gerente"
+msgstr "Gerente"
+
+msgid "Gestor"
+msgstr "Gestor"
+
+msgid "Gestores do Projeto"
+msgstr "Gestores do Projeto"
+
+msgid "Gestão"
+msgstr "Gestão"
+
+msgid "Gestão de Usuários"
+msgstr "Gestão de Usuários"
+
+msgid "Histórico de Alocações"
+msgstr "Histórico de Alocações"
+
+msgid "Histórico de Responsáveis"
+msgstr "Histórico de Responsáveis"
+
+msgid "Horas por dia"
+msgstr "Horas por dia"
+
+msgid "Idioma"
+msgstr "Idioma"
+
+msgid "Inativo"
+msgstr "Inativo"
+
+msgid "Informações"
+msgstr "Informações"
+
+msgid "Início"
+msgstr "Início"
+
+msgid "Jornada completa"
+msgstr "Jornada completa"
+
+msgid "Jornada diária"
+msgstr "Jornada diária"
+
+msgid "Jornada diária (8h = 100%)"
+msgstr "Jornada diária (8h = 100%)"
+
+msgid "Limpar"
+msgstr "Limpar"
+
+msgid "Local"
+msgstr "Local"
+
+msgid "Localidade"
+msgstr "Localidade"
+
+msgid "Localização"
+msgstr "Localização"
+
+msgid "Marca"
+msgstr "Marca"
+
+msgid "Matrícula"
+msgstr "Matrícula"
+
+msgid "Meio período"
+msgstr "Meio período"
+
+msgid "Meu Perfil"
+msgstr "Meu Perfil"
+
+msgid "Modelo"
+msgstr "Modelo"
+
+msgid "Nenhum colaborador alocado neste projeto."
+msgstr "Nenhum colaborador alocado neste projeto."
+
+msgid "Nenhum colaborador encontrado"
+msgstr "Nenhum colaborador encontrado"
+
+msgid "Nenhum colaborador registrado neste projeto."
+msgstr "Nenhum colaborador registrado neste projeto."
+
+msgid "Nenhum histórico registrado para este notebook."
+msgstr "Nenhum histórico registrado para este notebook."
+
+msgid "Nenhum projeto vinculado a este contrato."
+msgstr "Nenhum projeto vinculado a este contrato."
+
+msgid "Nenhum resultado para"
+msgstr "Nenhum resultado para"
+
+msgid "Nenhuma alocação registrada."
+msgstr "Nenhuma alocação registrada."
+
+msgid "Nome"
+msgstr "Nome"
+
+msgid "Nome do projeto ou cliente"
+msgstr "Nome do projeto ou cliente"
+
+msgid "Nome ou matrícula do colaborador"
+msgstr "Nome ou matrícula do colaborador"
+
+msgid "Nome, e-mail, matrícula..."
+msgstr "Nome, e-mail, matrícula..."
+
+msgid "Notebook"
+msgstr "Notebook"
+
+msgid "Notebooks"
+msgstr "Notebooks"
+
+msgid "Nova senha"
+msgstr "Nova senha"
+
+msgid "Novo Cliente"
+msgstr "Novo Cliente"
+
+msgid "Novo Colaborador"
+msgstr "Novo Colaborador"
+
+msgid "Novo Contrato"
+msgstr "Novo Contrato"
+
+msgid "Novo Notebook"
+msgstr "Novo Notebook"
+
+msgid "Novo Projeto"
+msgstr "Novo Projeto"
+
+msgid "Novo Usuário"
+msgstr "Novo Usuário"
+
+msgid "Nº de Série"
+msgstr "Nº de Série"
+
+msgid "OV"
+msgstr "OV"
+
+msgid "OV anterior"
+msgstr "OV anterior"
+
+msgid "Observações"
+msgstr "Observações"
+
+msgid "Ocupação"
+msgstr "Ocupação"
+
+msgid "Operador"
+msgstr "Operador"
+
+msgid "Origem"
+msgstr "Origem"
+
+msgid "Pat. Cliente"
+msgstr "Pat. Cliente"
+
+msgid "Pat. NTT"
+msgstr "Pat. NTT"
+
+msgid "Patrimônio Cliente"
+msgstr "Patrimônio Cliente"
+
+msgid "Patrimônio NTT"
+msgstr "Patrimônio NTT"
+
+msgid "Perfil"
+msgstr "Perfil"
+
+msgid "Período"
+msgstr "Período"
+
+msgid "Por Colaborador"
+msgstr "Por Colaborador"
+
+msgid "Por Projeto"
+msgstr "Por Projeto"
+
+msgid "Português"
+msgstr "Português"
+
+msgid "Previsto"
+msgstr "Previsto"
+
+msgid "Principal"
+msgstr "Principal"
+
+msgid "Projeto"
+msgstr "Projeto"
+
+msgid "Projeto Atual"
+msgstr "Projeto Atual"
+
+msgid "Projetos"
+msgstr "Projetos"
+
+msgid "Projetos Ativos"
+msgstr "Projetos Ativos"
+
+msgid "Projetos encontrados — clique para ver a timeline"
+msgstr "Projetos encontrados — clique para ver a timeline"
+
+msgid "Projetos vinculados"
+msgstr "Projetos vinculados"
+
+msgid "Relatório de Alocações Ativas"
+msgstr "Relatório de Alocações Ativas"
+
+msgid "Relatório de Colaboradores"
+msgstr "Relatório de Colaboradores"
+
+msgid "Relatório de Notebooks"
+msgstr "Relatório de Notebooks"
+
+msgid "Relatórios"
+msgstr "Relatórios"
+
+msgid "Renovável"
+msgstr "Renovável"
+
+msgid "Resp. cliente"
+msgstr "Resp. cliente"
+
+msgid "Responsável"
+msgstr "Responsável"
+
+msgid "Sair"
+msgstr "Sair"
+
+msgid "Salvar"
+msgstr "Salvar"
+
+msgid "Sem responsável"
+msgstr "Sem responsável"
+
+msgid "Senha"
+msgstr "Senha"
+
+msgid "Squad"
+msgstr "Squad"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Suporte pontual"
+msgstr "Suporte pontual"
+
+msgid "Tem certeza que deseja excluir"
+msgstr "Tem certeza que deseja excluir"
+
+msgid "Tente ajustar os filtros de busca."
+msgstr "Tente ajustar os filtros de busca."
+
+msgid "Tente um termo diferente."
+msgstr "Tente um termo diferente."
+
+msgid "Timeline"
+msgstr "Timeline"
+
+msgid "Timeline Colaboradores"
+msgstr "Timeline Colaboradores"
+
+msgid "Timeline Notebooks"
+msgstr "Timeline Notebooks"
+
+msgid "Todos"
+msgstr "Todos"
+
+msgid "Total colaboradores"
+msgstr "Total colaboradores"
+
+msgid "Total de registros"
+msgstr "Total de registros"
+
+msgid "Término"
+msgstr "Término"
+
+msgid "Usuário ou e-mail"
+msgstr "Usuário ou e-mail"
+
+msgid "Usuários"
+msgstr "Usuários"
+
+msgid "Ver timeline"
+msgstr "Ver timeline"
+
+msgid "Vigente"
+msgstr "Vigente"
+
+msgid "Vigência"
+msgstr "Vigência"
+
+msgid "Visualizar"
+msgstr "Visualizar"
+
+msgid "Voltar"
+msgstr "Voltar"
+
+msgid "Voltar à Timeline"
+msgstr "Voltar à Timeline"
+
+msgid "da jornada"
+msgstr "da jornada"
+
+msgid "pessoa(s)"
+msgstr "pessoa(s)"
+
+msgid "por dia"
+msgstr "por dia"
+
+msgid "presente"
+msgstr "presente"
+
+msgid "projeto(s)"
+msgstr "projeto(s)"
+
+msgid "Usuário"
+msgstr "Usuário"
+
+msgid "Usuários do Sistema"
+msgstr "Usuários do Sistema"
+
+msgid "usuário(s)"
+msgstr "usuário(s)"
+
+msgid "Nenhum usuário encontrado"
+msgstr "Nenhum usuário encontrado"
+
+msgid "Nome, e-mail, usuário, matrícula..."
+msgstr "Nome, e-mail, usuário, matrícula..."
+
+msgid "Habilitado"
+msgstr "Habilitado"
+
+msgid "Bloqueado"
+msgstr "Bloqueado"
+
+msgid "Redefinir senha"
+msgstr "Redefinir senha"
+
+msgid "Redefinir"
+msgstr "Redefinir"
+
+msgid "Redefinir Senha"
+msgstr "Redefinir Senha"
+
+msgid "Excluir Usuário"
+msgstr "Excluir Usuário"
+
+msgid "Conta habilitada (acesso ao sistema)"
+msgstr "Conta habilitada (acesso ao sistema)"
+
+msgid "Corrija os erros abaixo:"
+msgstr "Corrija os erros abaixo:"
+
+msgid "Sim, excluir"
+msgstr "Sim, excluir"
+
+msgid "Mínimo 8 caracteres"
+msgstr "Mínimo 8 caracteres"
+
+msgid "Repita a senha"
+msgstr "Repita a senha"
+
+msgid "As senhas não coincidem."
+msgstr "As senhas não coincidem."
+
+msgid "A senha deve ter pelo menos 8 caracteres."
+msgstr "A senha deve ter pelo menos 8 caracteres."
+
+msgid "Acesso restrito a gestores."
+msgstr "Acesso restrito a gestores."
+
+msgid "Você não pode excluir sua própria conta."
+msgstr "Você não pode excluir sua própria conta."
+
+msgid "Dados de Acesso"
+msgstr "Dados de Acesso"
+
+msgid "Nome completo"
+msgstr "Nome completo"
+
+msgid "Perfil de acesso"
+msgstr "Perfil de acesso"
+
+msgid "Gestor direto"
+msgstr "Gestor direto"
+
+msgid "Telefone"
+msgstr "Telefone"
+
+msgid "Cidade"
+msgstr "Cidade"
+
+msgid "Estado"
+msgstr "Estado"
+
+msgid "Data de admissão"
+msgstr "Data de admissão"
+
+msgid "Tem certeza que deseja excluir o usuário"
+msgstr "Tem certeza que deseja excluir o usuário"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Acesso"
+msgstr "Acesso"
+
+msgid "Esqueci minha senha"
+msgstr "Esqueci minha senha"
+
+msgid "Gestão de Colaboradores e Projetos"
+msgstr "Gestão de Colaboradores e Projetos"
+
+msgid "Informe suas credenciais para acessar o sistema."
+msgstr "Informe suas credenciais para acessar o sistema."
+
+msgid "Manter conectado"
+msgstr "Manter conectado"

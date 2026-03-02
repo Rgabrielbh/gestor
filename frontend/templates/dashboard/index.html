@@ -1,0 +1,379 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Dashboard" %} — NTT Data{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1><span class="material-icons-outlined">dashboard</span>{% trans "Dashboard" %}</h1>
+    <div class="breadcrumb">
+      <span class="material-icons-outlined" style="font-size:14px;">calendar_today</span>
+      {{ hoje|date:"l, d \d\e F \d\e Y" }}
+    </div>
+  </div>
+  <div class="page-header-actions">
+    <span class="badge badge-role-{{ user.role }}">{{ user.get_role_display }}</span>
+  </div>
+</div>
+
+{# ── Alertas críticos ─────────────────────────────────────────────── #}
+{% if contratos_vencendo_30 or projetos_sem_contrato %}
+<div style="display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem;">
+  {% if contratos_vencendo_30 %}
+  <div style="display:flex;align-items:center;gap:.5rem;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:.5rem .875rem;font-size:.8125rem;color:#92400E;">
+    <span class="material-icons-outlined" style="font-size:16px;color:#D97706;">schedule</span>
+    <strong>{{ contratos_vencendo_30 }}</strong>&nbsp;{% trans "contrato(s) vencem em 30 dias" %}
+    <a href="{% url 'contratos-list' %}" style="margin-left:.5rem;color:#D97706;font-weight:600;font-size:.75rem;">{% trans "Ver" %} →</a>
+  </div>
+  {% endif %}
+  {% if projetos_sem_contrato %}
+  <div style="display:flex;align-items:center;gap:.5rem;background:#FFF0ED;border:1px solid #FECDB4;border-radius:6px;padding:.5rem .875rem;font-size:.8125rem;color:#7C2D12;">
+    <span class="material-icons-outlined" style="font-size:16px;color:#C94E2C;">warning_amber</span>
+    <strong>{{ projetos_sem_contrato }}</strong>&nbsp;{% trans "projeto(s) com contrato pendente" %}
+    <a href="{% url 'projetos-list' %}" style="margin-left:.5rem;color:#C94E2C;font-weight:600;font-size:.75rem;">{% trans "Ver" %} →</a>
+  </div>
+  {% endif %}
+  {% if colaboradores_sem_alocacao %}
+  <div style="display:flex;align-items:center;gap:.5rem;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:.5rem .875rem;font-size:.8125rem;color:#1E40AF;">
+    <span class="material-icons-outlined" style="font-size:16px;color:#2563EB;">person_off</span>
+    <strong>{{ colaboradores_sem_alocacao }}</strong>&nbsp;{% trans "colaborador(es) sem alocação" %}
+    <a href="{% url 'colaboradores-list' %}" style="margin-left:.5rem;color:#2563EB;font-weight:600;font-size:.75rem;">{% trans "Ver" %} →</a>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{# ── KPI Cards ─────────────────────────────────────────────────────── #}
+<div class="kpi-grid" style="margin-bottom:1rem;">
+  <div class="kpi-card blue">
+    <div class="kpi-top">
+      <div>
+        <div class="kpi-value">{{ total_colaboradores }}</div>
+        <div class="kpi-label">{% trans "Colaboradores Ativos" %}</div>
+      </div>
+      <div class="kpi-icon-wrap blue"><span class="material-icons-outlined">people_alt</span></div>
+    </div>
+    <div class="kpi-sub">
+      <span class="material-icons" style="font-size:13px;color:var(--success);">check_circle</span>
+      {{ alocacoes_ativas }} {% trans "alocados em projetos" %}
+    </div>
+  </div>
+
+  <div class="kpi-card green">
+    <div class="kpi-top">
+      <div>
+        <div class="kpi-value">{{ total_projetos }}</div>
+        <div class="kpi-label">{% trans "Projetos Ativos" %}</div>
+      </div>
+      <div class="kpi-icon-wrap green"><span class="material-icons-outlined">work_outline</span></div>
+    </div>
+    <div class="kpi-sub">
+      <span class="material-icons" style="font-size:13px;color:var(--ntt-blue);">business</span>
+      {{ total_clientes }} {% trans "clientes atendidos" %}
+    </div>
+  </div>
+
+  <div class="kpi-card orange">
+    <div class="kpi-top">
+      <div>
+        <div class="kpi-value">{{ contratos_vigentes }}</div>
+        <div class="kpi-label">{% trans "Contratos Vigentes" %}</div>
+      </div>
+      <div class="kpi-icon-wrap orange"><span class="material-icons-outlined">description</span></div>
+    </div>
+    <div class="kpi-sub">
+      <span class="material-icons" style="font-size:13px;color:{% if contratos_vencendo_30 %}var(--warning){% else %}var(--success){% endif %};">schedule</span>
+      {% if contratos_vencendo_30 %}{{ contratos_vencendo_30 }} {% trans "vencem em 30 dias" %}{% else %}{% trans "Nenhum vencendo em breve" %}{% endif %}
+    </div>
+  </div>
+
+  <div class="kpi-card purple">
+    <div class="kpi-top">
+      <div>
+        <div class="kpi-value">{{ alocacoes_ativas }}</div>
+        <div class="kpi-label">{% trans "Alocações Ativas" %}</div>
+      </div>
+      <div class="kpi-icon-wrap purple"><span class="material-icons-outlined">assignment_ind</span></div>
+    </div>
+    <div class="kpi-sub">
+      <span class="material-icons" style="font-size:13px;color:var(--warning);">person_off</span>
+      {{ colaboradores_sem_alocacao }} {% trans "sem alocação" %}
+    </div>
+  </div>
+</div>
+
+{# ── Linha 2: Gráficos ────────────────────────────────────────────── #}
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+
+  {# Headcount por cliente #}
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <span class="material-icons-outlined">business</span>{% trans "Headcount por Cliente" %}
+      </div>
+    </div>
+    <div class="card-body" style="height:240px;">
+      <canvas id="chartClientes"></canvas>
+    </div>
+  </div>
+
+  {# Alocações por projeto #}
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <span class="material-icons-outlined">bar_chart</span>{% trans "Alocações por Projeto" %}
+      </div>
+    </div>
+    <div class="card-body" style="height:240px;">
+      <canvas id="chartProjetos"></canvas>
+    </div>
+  </div>
+
+</div>
+
+{# ── Linha 3: Status dos projetos + Contratos ─────────────────────── #}
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+
+  {# Status de alocação dos projetos #}
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <span class="material-icons-outlined">monitor_heart</span>{% trans "Saúde dos Projetos" %}
+      </div>
+      <a href="{% url 'projetos-list' %}" class="btn btn-outline btn-sm">{% trans "Ver todos" %}</a>
+    </div>
+    <div class="card-body" style="padding:.5rem 0;">
+
+      {% if projetos_criticos %}
+      <div style="padding:.4rem 1.125rem .25rem;font-size:.68rem;font-weight:700;color:#B91C1C;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:.3rem;">
+        <span class="material-icons" style="font-size:12px;">circle</span>{% trans "Sub-alocados" %} (&lt;50%)
+      </div>
+      {% for p in projetos_criticos %}
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem 1.125rem;border-bottom:1px solid var(--gray-100);">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:.8125rem;font-weight:600;color:var(--gray-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ p.nome_proj_ntt }}</div>
+          <div style="font-size:.72rem;color:var(--gray-500);">{{ p.id_cliente.nome }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0;">
+          <div class="progress" style="width:80px;"><div class="progress-bar red" style="width:{{ p.percentual_alocacao }}%;"></div></div>
+          <span style="font-size:.75rem;font-weight:600;color:#B91C1C;min-width:36px;text-align:right;">{{ p.percentual_alocacao }}%</span>
+        </div>
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      {% if projetos_atencao %}
+      <div style="padding:.5rem 1.125rem .25rem;font-size:.68rem;font-weight:700;color:#B45309;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:.3rem;">
+        <span class="material-icons" style="font-size:12px;">circle</span>{% trans "Atenção" %} (50–79%)
+      </div>
+      {% for p in projetos_atencao %}
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem 1.125rem;border-bottom:1px solid var(--gray-100);">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:.8125rem;font-weight:600;color:var(--gray-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ p.nome_proj_ntt }}</div>
+          <div style="font-size:.72rem;color:var(--gray-500);">{{ p.id_cliente.nome }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0;">
+          <div class="progress" style="width:80px;"><div class="progress-bar orange" style="width:{{ p.percentual_alocacao }}%;"></div></div>
+          <span style="font-size:.75rem;font-weight:600;color:#B45309;min-width:36px;text-align:right;">{{ p.percentual_alocacao }}%</span>
+        </div>
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      {% if projetos_saudaveis %}
+      <div style="padding:.5rem 1.125rem .25rem;font-size:.68rem;font-weight:700;color:#15803D;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:.3rem;">
+        <span class="material-icons" style="font-size:12px;">circle</span>{% trans "Saudáveis" %} (≥80%)
+      </div>
+      {% for p in projetos_saudaveis %}
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem 1.125rem;border-bottom:1px solid var(--gray-100);">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:.8125rem;font-weight:600;color:var(--gray-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ p.nome_proj_ntt }}</div>
+          <div style="font-size:.72rem;color:var(--gray-500);">{{ p.id_cliente.nome }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0;">
+          <div class="progress" style="width:80px;"><div class="progress-bar green" style="width:{{ p.percentual_alocacao }}%;"></div></div>
+          <span style="font-size:.75rem;font-weight:600;color:#15803D;min-width:36px;text-align:right;">{{ p.percentual_alocacao }}%</span>
+        </div>
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      {% if not projetos_criticos and not projetos_atencao and not projetos_saudaveis %}
+      <div class="empty-state"><span class="material-icons-outlined">work_outline</span><h3>{% trans "Nenhum projeto ativo." %}</h3></div>
+      {% endif %}
+
+    </div>
+  </div>
+
+  {# Contratos vencendo #}
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <span class="material-icons-outlined">event_busy</span>{% trans "Contratos Vencendo em 60 Dias" %}
+      </div>
+      <a href="{% url 'contratos-list' %}" class="btn btn-outline btn-sm">{% trans "Ver todos" %}</a>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>{% trans "Contrato" %}</th>
+            <th>{% trans "Cliente" %}</th>
+            <th>{% trans "Vencimento" %}</th>
+            <th>{% trans "Prazo" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ct in contratos_proximos %}
+          <tr>
+            <td style="font-weight:600;font-size:.8125rem;">{{ ct.codigo }}</td>
+            <td style="font-size:.8rem;color:var(--gray-500);">{{ ct.cliente.nome|truncatechars:20 }}</td>
+            <td style="font-size:.8rem;white-space:nowrap;">{{ ct.dt_fim|date:"d/m/Y" }}</td>
+            <td>
+              {% with dias=ct.dias_para_vencimento %}
+              <span class="badge {% if dias <= 30 %}badge-warning{% else %}badge-info{% endif %}">
+                {{ dias }}d
+              </span>
+              {% endwith %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4"><div class="empty-state" style="padding:2rem;"><span class="material-icons-outlined">event_available</span><h3>{% trans "Nenhum contrato vencendo em 60 dias." %}</h3></div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+{# ── Linha 4: Projetos recentes + Admissões ───────────────────────── #}
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left"><span class="material-icons-outlined">work_outline</span>{% trans "Projetos Recentes" %}</div>
+      <a href="{% url 'projetos-list' %}" class="btn btn-outline btn-sm">{% trans "Ver todos" %}</a>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>{% trans "Projeto" %}</th><th>{% trans "Cliente" %}</th><th>{% trans "Alocação" %}</th></tr></thead>
+        <tbody>
+          {% for proj in projetos_recentes %}
+          <tr>
+            <td>
+              <a href="{% url 'projetos-detail' proj.pk %}" style="color:var(--ntt-blue);text-decoration:none;font-weight:500;">{{ proj.nome_proj_ntt|truncatechars:28 }}</a>
+              {% if proj.contrato_pend %}<span class="badge badge-warning" style="margin-left:.3rem;font-size:.65rem;">Pend.</span>{% endif %}
+            </td>
+            <td style="color:var(--gray-500);font-size:.8rem;">{{ proj.id_cliente.nome|truncatechars:18 }}</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:.4rem;">
+                <div class="progress" style="flex:1;min-width:50px;">
+                  <div class="progress-bar {% if proj.percentual_alocacao >= 80 %}green{% elif proj.percentual_alocacao >= 50 %}orange{% else %}red{% endif %}" style="width:{{ proj.percentual_alocacao }}%;"></div>
+                </div>
+                <span style="font-size:.75rem;color:var(--gray-500);white-space:nowrap;">{{ proj.percentual_alocacao }}%</span>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" style="padding:2rem;text-align:center;color:var(--gray-400);">{% trans "Nenhum projeto." %}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left"><span class="material-icons-outlined">person_add</span>{% trans "Admissões do Mês" %}</div>
+      <a href="{% url 'colaboradores-list' %}" class="btn btn-outline btn-sm">{% trans "Ver todos" %}</a>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>{% trans "Colaborador" %}</th><th>{% trans "Cargo" %}</th><th>{% trans "Admissão" %}</th></tr></thead>
+        <tbody>
+          {% for colab in colaboradores_recentes %}
+          <tr>
+            <td>
+              <div class="user-row">
+                <div class="avatar avatar-sm avatar-blue">{{ colab.nome|first|upper }}</div>
+                <div class="user-row-info">
+                  <span class="user-row-name">{{ colab.nome|truncatechars:20 }}</span>
+                  <span class="user-row-sub">{{ colab.get_role_display }}</span>
+                </div>
+              </div>
+            </td>
+            <td style="font-size:.8rem;color:var(--gray-500);">{{ colab.cargo|default:"—"|truncatechars:18 }}</td>
+            <td style="font-size:.8rem;color:var(--gray-500);white-space:nowrap;">{{ colab.dt_admissao|date:"d/m/Y"|default:"—" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" style="padding:2rem;text-align:center;color:var(--gray-400);">{% trans "Nenhuma admissão este mês." %}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+const azuis = ["#0057A8","#0A3272","#0D5FA6","#1A7BC4","#2596E1","#3BAEE8","#56C3F0"];
+
+// Headcount por cliente
+const clienteData = {{ headcount_por_cliente|safe }};
+new Chart(document.getElementById("chartClientes"), {
+  type: "bar",
+  data: {
+    labels: clienteData.map(d => d.id_cliente__nome || "—"),
+    datasets: [{
+      label: "{% trans 'Colaboradores' %}",
+      data: clienteData.map(d => d.total),
+      backgroundColor: azuis,
+      borderRadius: 5,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, grid: { color: "#F3F4F6" }, ticks: { font: { size: 10 }, stepSize: 1 } },
+      x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 25 } }
+    }
+  }
+});
+
+// Alocações por projeto
+const projData = {{ alocacoes_por_projeto|safe }};
+new Chart(document.getElementById("chartProjetos"), {
+  type: "bar",
+  data: {
+    labels: projData.map(d => {
+      const n = d.id_proj__nome_proj_ntt || "—";
+      return n.length > 22 ? n.substring(0, 22) + "…" : n;
+    }),
+    datasets: [{
+      label: "{% trans 'Alocados' %}",
+      data: projData.map(d => d.total),
+      backgroundColor: "#0A3272",
+      borderRadius: 5,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    indexAxis: "y",
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { beginAtZero: true, grid: { color: "#F3F4F6" }, ticks: { font: { size: 10 }, stepSize: 1 } },
+      y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+</script>
+{% endblock %}
